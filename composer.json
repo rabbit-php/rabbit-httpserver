@@ -1,0 +1,21 @@
+{
+    "name": "rabbit/httpserver",
+    "description": "rabbit httpserver",
+    "type": "library",
+    "require": {
+        "rabbit/framework": "dev-master",
+        "rabbit/server": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "albert",
+            "email": "63851587@qq.com"
+        }
+    ],
+    "autoload": {
+      "psr-4": {
+        "rabbit\\httpserver\\": "src/"
+      }
+    }
+}
