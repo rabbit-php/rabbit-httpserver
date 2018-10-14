@@ -10,7 +10,7 @@ namespace rabbit\httpserver;
 
 
 use rabbit\console\Command;
-use rabbit\framework\core\ObjectFactory;
+use rabbit\core\ObjectFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

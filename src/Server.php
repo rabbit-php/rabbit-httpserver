@@ -8,9 +8,9 @@
 
 namespace rabbit\httpserver;
 
-use rabbit\framework\contract\DispatcherInterface;
-use rabbit\framework\core\ObjectFactory;
-use rabbit\framework\core\SingletonTrait;
+use rabbit\contract\DispatcherInterface;
+use rabbit\core\ObjectFactory;
+use rabbit\core\SingletonTrait;
 use swoole_http_server;
 
 class Server extends \rabbit\server\Server
@@ -67,7 +67,7 @@ class Server extends \rabbit\server\Server
             $this->server->on('message', [$this, 'onMessage']);
         }
 
-        $this->server->set(ObjectFactory::get('server'));
+        $this->server->set(ObjectFactory::get('server.setting'));
         $this->beforeStart();
         $this->server->start();
     }

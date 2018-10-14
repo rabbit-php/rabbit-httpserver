@@ -11,35 +11,27 @@ namespace rabbit\httpserver;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use rabbit\framework\contract\HandlerInterface;
-use rabbit\framework\core\Context;
-use rabbit\framework\handler\ErrorHandlerInterface;
-use rabbit\framework\handler\RequestHandlerInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use rabbit\contract\HandlerInterface;
+use rabbit\core\Context;
+use rabbit\handler\ErrorHandlerInterface;
 use rabbit\server\ServerDispatcher;
 
 class HttpDispatcher extends ServerDispatcher
 {
     /**
-     * @var array
+     * @var RequestHandlerInterface
      */
-    private $handlers = [];
+    private $requestHandler;
 
-    public function dispatch(...$params)
+    public function dispatch(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        /**
-         * @var RequestInterface $request
-         * @var ResponseInterface $response
-         */
-        list($request, $response) = $params;
         try {
             // before dispatcher
             $this->beforeDispatch($request, $response);
-            foreach ($this->handlers as $name => $handler) {
-                /**
-                 * @var RequestHandlerInterface $handler
-                 */
-                $response = $handler->handle($request);
-            }
+            $requestHandler = new ($this->requestHandler)($this->middlewares);
+            $response = $requestHandler->handle($request);
         } catch (\Throwable $throwable) {
             /**
              * @var ErrorHandlerInterface $errorHandler
@@ -49,6 +41,7 @@ class HttpDispatcher extends ServerDispatcher
             throw new $throwable;
         }
         $this->afterDispatch($response);
+        return $response;
     }
 
     protected function beforeDispatch(RequestInterface $request, ResponseInterface $response)
