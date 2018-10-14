@@ -12,9 +12,7 @@ namespace rabbit\httpserver;
 use rabbit\console\Command;
 use rabbit\framework\core\ObjectFactory;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class HttpCommand extends Command

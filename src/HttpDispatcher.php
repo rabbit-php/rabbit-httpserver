@@ -11,10 +11,8 @@ namespace rabbit\httpserver;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use rabbit\framework\contract\DispatcherInterface;
 use rabbit\framework\contract\HandlerInterface;
 use rabbit\framework\core\Context;
-use rabbit\framework\core\ObjectFactory;
 use rabbit\framework\handler\ErrorHandlerInterface;
 use rabbit\framework\handler\RequestHandlerInterface;
 use rabbit\server\ServerDispatcher;

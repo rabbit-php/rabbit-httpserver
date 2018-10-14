@@ -8,9 +8,8 @@
 
 namespace rabbit\httpserver;
 
-use Psr\Http\Message\ServerRequestInterface;
-use swoole_http_server;
 use rabbit\framework\core\SingletonTrait;
+use swoole_http_server;
 
 class Server extends \rabbit\server\Server
 {
