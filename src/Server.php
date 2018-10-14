@@ -9,24 +9,20 @@
 namespace rabbit\httpserver;
 
 use Psr\Http\Message\ServerRequestInterface;
-use rabbit\web\Request;
-use rabbit\web\Response;
 use swoole_http_server;
 use rabbit\framework\core\SingletonTrait;
 
-class Server extends \rabbit\servers\Server
+class Server extends \rabbit\server\Server
 {
-    use HttpTrait;
+    /**
+     * @var string
+     */
+    private $request;
 
     /**
      * @var string
      */
-    private $request = Request::class;
-
-    /**
-     * @var string
-     */
-    private $response = Response::class;
+    private $response;
 
     public function start()
     {
@@ -51,6 +47,11 @@ class Server extends \rabbit\servers\Server
 
         $this->server->on('request', [$this, 'onRequest']);
 
+        $this->server->on('task', [$this, 'onTask']);
+        $this->server->on('finish', [$this, 'onFinish']);
+
+        $this->server->on('pipeMessage', [$this, 'onPipeMessage']);
+
         if (method_exists($this, 'onOpen')) {
             $this->server->on('open', [$this, 'onOpen']);
         }
@@ -65,18 +66,26 @@ class Server extends \rabbit\servers\Server
             $this->server->on('message', [$this, 'onMessage']);
         }
 
-        if (method_exists($this, 'onTask')) {
-            $this->server->on('task', [$this, 'onTask']);
-        }
-        if (method_exists($this, 'onFinish')) {
-            $this->server->on('finish', [$this, 'onFinish']);
-        }
-        if (method_exists($this, 'onPipeMessage')) {
-            $this->server->on('pipeMessage', [$this, 'onPipeMessage']);
-        }
-
         $this->server->set($this->config['server']);
         $this->beforeStart();
         $this->server->start();
+    }
+
+    /**
+     * @var DispatcherInterface
+     */
+    private $dispatcher;
+
+    /**
+     * 执行请求
+     *
+     * @param swoole_http_request $request
+     * @param swoole_http_response $response
+     */
+    public function onRequest($request, $response)
+    {
+        $psrRequest = $this->request['class'];
+        $psrResponse = $this->response['class'];
+        $this->dispatcher->dispatch(new $psrRequest($request), new $psrResponse($response));
     }
 }
