@@ -30,7 +30,7 @@ class HttpDispatcher extends ServerDispatcher
         try {
             // before dispatcher
             $this->beforeDispatch($request, $response);
-            $requestHandler = new ($this->requestHandler)($this->middlewares);
+            $requestHandler = new $this->requestHandler['class']($this->middlewares, $this->default);
             $response = $requestHandler->handle($request);
         } catch (\Throwable $throwable) {
             /**
@@ -38,7 +38,7 @@ class HttpDispatcher extends ServerDispatcher
              */
 //            $errorHandler = ObjectFactory::get('errorHandler');
 //            $errorHandler->handle($throwable);
-            throw new $throwable;
+            throw $throwable;
         }
         $this->afterDispatch($response);
         return $response;
