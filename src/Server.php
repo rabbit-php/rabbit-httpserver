@@ -13,6 +13,10 @@ use rabbit\core\ObjectFactory;
 use rabbit\core\SingletonTrait;
 use swoole_http_server;
 
+/**
+ * Class Server
+ * @package rabbit\httpserver
+ */
 class Server extends \rabbit\server\Server
 {
     /**
@@ -25,18 +29,27 @@ class Server extends \rabbit\server\Server
      */
     private $response;
 
-    public function start()
+    /**
+     *
+     */
+    public function start(): void
     {
         $this->createServer();
         $this->startServer();
     }
 
-    protected function createServer()
+    /**
+     *
+     */
+    protected function createServer(): void
     {
         $this->server = new swoole_http_server($this->config['host'], $this->config['port'], $this->config['type']);
     }
 
-    protected function startServer()
+    /**
+     * @throws \Exception
+     */
+    protected function startServer(): void
     {
         $this->server->on('start', [$this, 'onStart']);
         $this->server->on('shutdown', [$this, 'onShutdown']);
@@ -83,7 +96,7 @@ class Server extends \rabbit\server\Server
      * @param swoole_http_request $request
      * @param swoole_http_response $response
      */
-    public function onRequest($request, $response)
+    public function onRequest($request, $response): void
     {
         $psrRequest = $this->request['class'];
         $psrResponse = $this->response['class'];

@@ -15,15 +15,27 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class HttpCommand
+ * @package rabbit\httpserver
+ */
 class HttpCommand extends Command
 {
-    protected function configure()
+    /**
+     *
+     */
+    protected function configure(): void
     {
         $this->setName('http:server')->setDescription('start|stop|reload httpserver')->setHelp('This command allows you to start|stop|reload httpserver.')
             ->addArgument('cmd', InputArgument::REQUIRED, 'start|stop|reload');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @throws \Exception
+     */
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $cmd = $input->getArgument('cmd');
         ObjectFactory::get('httpserver')->$cmd();
