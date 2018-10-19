@@ -30,59 +30,22 @@ class Server extends \rabbit\server\Server
     private $response;
 
     /**
-     *
+     * @return \Swoole\Server
      */
-    public function start(): void
+    protected function createServer(): \Swoole\Server
     {
-        $this->createServer();
-        $this->startServer();
-    }
-
-    /**
-     *
-     */
-    protected function createServer(): void
-    {
-        $this->server = new swoole_http_server($this->config['host'], $this->config['port'], $this->config['type']);
+        return new swoole_http_server($this->host, $this->port, $this->type);
     }
 
     /**
      * @throws \Exception
      */
-    protected function startServer(): void
+    protected function startServer(\Swoole\Server $server = null): void
     {
-        $this->server->on('start', [$this, 'onStart']);
-        $this->server->on('shutdown', [$this, 'onShutdown']);
-
-        $this->server->on('managerStart', [$this, 'onManagerStart']);
-
-        $this->server->on('workerStart', [$this, 'onWorkerStart']);
-        $this->server->on('workerStop', [$this, 'onWorkerStop']);
-
-        $this->server->on('request', [$this, 'onRequest']);
-
-        $this->server->on('task', [$this, 'onTask']);
-        $this->server->on('finish', [$this, 'onFinish']);
-
-        $this->server->on('pipeMessage', [$this, 'onPipeMessage']);
-
-        if (method_exists($this, 'onOpen')) {
-            $this->server->on('open', [$this, 'onOpen']);
-        }
-        if (method_exists($this, 'onClose')) {
-            $this->server->on('close', [$this, 'onClose']);
-        }
-
-        if (method_exists($this, 'onHandShake')) {
-            $this->server->on('handshake', [$this, 'onHandShake']);
-        }
-        if (method_exists($this, 'onMessage')) {
-            $this->server->on('message', [$this, 'onMessage']);
-        }
-
-        $this->server->set(ObjectFactory::get('server.setting'));
-        $this->beforeStart();
-        $this->server->start();
+        parent::startServer($server);
+        $server->on('request', [$this, 'onRequest']);
+        $server->set(ObjectFactory::get('server.setting'));
+        $server->start();
     }
 
     /**
