@@ -8,7 +8,6 @@
 
 namespace rabbit\httpserver;
 
-use rabbit\contract\DispatcherInterface;
 use rabbit\core\ObjectFactory;
 use rabbit\core\SingletonTrait;
 use swoole_http_server;
@@ -49,17 +48,12 @@ class Server extends \rabbit\server\Server
     }
 
     /**
-     * @var DispatcherInterface
-     */
-    private $dispatcher;
-
-    /**
      * 执行请求
      *
      * @param swoole_http_request $request
      * @param swoole_http_response $response
      */
-    public function onRequest($request, $response): void
+    public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response): void
     {
         $psrRequest = $this->request['class'];
         $psrResponse = $this->response['class'];
