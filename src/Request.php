@@ -65,7 +65,9 @@ class Request implements ServerRequestInterface
      */
     private $uri;
 
-
+    /**
+     * @var string
+     */
     private $requestTarget;
 
     /**
@@ -93,7 +95,7 @@ class Request implements ServerRequestInterface
      * @param array $files
      * @return array
      */
-    private static function normalizeFiles(array $files)
+    private static function normalizeFiles(array $files): array
     {
         $normalized = [];
 
@@ -117,7 +119,7 @@ class Request implements ServerRequestInterface
      * @param array $value
      * @return array|UploadedFile
      */
-    private static function createUploadedFileFromSpec(array $value)
+    private static function createUploadedFileFromSpec(array $value): UploadedFile
     {
         if (is_array($value['tmp_name'])) {
             return self::normalizeNestedFileSpec($value);
@@ -130,7 +132,7 @@ class Request implements ServerRequestInterface
      * @param array $files
      * @return array
      */
-    private static function normalizeNestedFileSpec(array $files = [])
+    private static function normalizeNestedFileSpec(array $files = []): array
     {
         $normalizedFiles = [];
 
@@ -150,9 +152,9 @@ class Request implements ServerRequestInterface
 
     /**
      * @param \Swoole\Http\Request $swooleRequest
-     * @return Uri|static
+     * @return Uri
      */
-    private static function getUriFromGlobals(\Swoole\Http\Request $swooleRequest)
+    private static function getUriFromGlobals(\Swoole\Http\Request $swooleRequest): Uri
     {
         $server = $swooleRequest->server;
         $header = $swooleRequest->header;
@@ -429,7 +431,7 @@ class Request implements ServerRequestInterface
      * @param array $serverParams
      * @return Request
      */
-    public function withServerParams(array $serverParams)
+    public function withServerParams(array $serverParams): Request
     {
         $clone = $this;
         $clone->serverParams = $serverParams;
@@ -440,7 +442,7 @@ class Request implements ServerRequestInterface
      * @param array $headers
      * @return $this
      */
-    private function setHeaders(array $headers)
+    private function setHeaders(array $headers): Request
     {
         $this->headers = [];
         foreach ($headers as $header => $value) {
@@ -453,7 +455,7 @@ class Request implements ServerRequestInterface
     /**
      *
      */
-    private function updateHostFromUri()
+    private function updateHostFromUri(): void
     {
         $host = $this->uri->getHost();
 
@@ -486,7 +488,7 @@ class Request implements ServerRequestInterface
      * @param \Swoole\Http\Request $swooleRequest
      * @return $this
      */
-    public function setSwooleRequest(\Swoole\Http\Request $swooleRequest)
+    public function setSwooleRequest(\Swoole\Http\Request $swooleRequest): Request
     {
         $this->swooleRequest = $swooleRequest;
         return $this;

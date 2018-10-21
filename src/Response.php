@@ -115,8 +115,7 @@ class Response implements ResponseInterface
     protected $cookies = [];
 
     /**
-     * 初始化响应请求
-     *
+     * Response constructor.
      * @param \Swoole\Http\Response $response
      */
     public function __construct(\Swoole\Http\Response $response)
@@ -159,7 +158,7 @@ class Response implements ResponseInterface
     /**
      * 处理 Response 并发送数据
      */
-    public function send()
+    public function send(): void
     {
         $response = $this;
 
@@ -255,7 +254,7 @@ class Response implements ResponseInterface
     /**
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
@@ -275,7 +274,7 @@ class Response implements ResponseInterface
      * @param $value
      * @return Response
      */
-    public function withAttribute($name, $value)
+    public function withAttribute(string $name, $value): Response
     {
         $clone = $this;
         $clone->attributes[$name] = $value;
