@@ -87,22 +87,22 @@ class Response implements ResponseInterface
      *
      * @var \Swoole\Http\Response
      */
-    protected $swooleResponse;
+    private $swooleResponse;
 
     /**
      * @var string
      */
-    protected $reasonPhrase = '';
+    private $reasonPhrase = '';
 
     /**
      * @var int
      */
-    protected $statusCode = 200;
+    private $statusCode = 200;
 
     /**
      * @var string
      */
-    protected $charset = 'utf-8';
+    private $charset = 'utf-8';
 
     /**
      * @var array
@@ -112,7 +112,7 @@ class Response implements ResponseInterface
     /**
      * @var array
      */
-    protected $cookies = [];
+    private $cookies = [];
 
     /**
      * Response constructor.
