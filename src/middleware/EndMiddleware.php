@@ -15,8 +15,8 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use rabbit\core\Context;
 use rabbit\core\ObjectFactory;
-use rabbit\server\AttributeEnum;
 use rabbit\httpserver\NotFoundHttpException;
+use rabbit\server\AttributeEnum;
 
 /**
  * Class EndMiddleware
