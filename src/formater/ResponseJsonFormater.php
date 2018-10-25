@@ -10,6 +10,7 @@ namespace rabbit\httpserver\formater;
 
 
 use Psr\Http\Message\ResponseInterface;
+use rabbit\helper\ArrayHelper;
 use rabbit\helper\JsonHelper;
 
 /**
@@ -33,6 +34,7 @@ class ResponseJsonFormater implements ResponseFormaterInterface
         if (!$response->isArrayable($data) || !is_object($data)) {
             $data = ['data' => $data];
         }
+        $data = ArrayHelper::toArray($data);
         $content = JsonHelper::encode($data, JSON_UNESCAPED_UNICODE);
         $response = $response->withContent($content);
 
