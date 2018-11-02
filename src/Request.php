@@ -41,6 +41,13 @@ class Request implements ServerRequestInterface
     private $parsedBody;
 
     /**
+     * the body of parser
+     *
+     * @var mixed
+     */
+    private $bodyParams;
+
+    /**
      * @var array
      */
     private $queryParams = [];
@@ -294,6 +301,25 @@ class Request implements ServerRequestInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getBodyParams()
+    {
+        return $this->bodyParams;
+    }
+
+    /**
+     * @param $data
+     * @return Request
+     */
+    public function withBodyParams($data): self
+    {
+        $clone = $this;
+        $clone->bodyParams = $data;
+        return $clone;
+    }
+
+    /**
      * @return array
      */
     public function getAttributes()
@@ -446,6 +472,11 @@ class Request implements ServerRequestInterface
     {
         $this->headers = [];
         foreach ($headers as $header => $value) {
+            if (!is_array($value)) {
+                $value = [$value];
+            }
+
+            $value = $this->trimHeaderValues($value);
             $normalized = strtolower($header);
             $this->headers[$normalized] = $value;
         }
