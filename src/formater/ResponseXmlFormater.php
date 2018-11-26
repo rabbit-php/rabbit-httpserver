@@ -14,7 +14,7 @@ use DOMException;
 use DOMText;
 use Psr\Http\Message\ResponseInterface;
 use rabbit\contract\Arrayable;
-use rabbit\helpers\StringHelper;
+use rabbit\helper\StringHelper;
 
 /**
  * Class ResponseXmlFormater

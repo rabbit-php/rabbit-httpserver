@@ -8,7 +8,6 @@
 
 namespace rabbit\httpserver;
 
-use rabbit\core\ObjectFactory;
 use rabbit\core\SingletonTrait;
 use swoole_http_server;
 
@@ -43,7 +42,6 @@ class Server extends \rabbit\server\Server
     {
         parent::startServer($server);
         $server->on('request', [$this, 'onRequest']);
-        $server->set(ObjectFactory::get('server.setting'));
         $server->start();
     }
 
