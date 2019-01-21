@@ -44,7 +44,7 @@ class ReqHandlerMiddleware implements MiddlewareInterface
         /**
          * @var ResponseInterface $response
          */
-        $response = $class($request->getQueryParams());
+        $response = $class($request->getQueryParams(), $request);
         if (!$response instanceof ResponseInterface) {
             /**
              * @var ResponseInterface $newResponse
