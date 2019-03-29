@@ -26,7 +26,8 @@ class RequestJsonParser implements RequestParserInterface
             } catch (\Exception $e) {
                 $bodyParams = $bodyContent;
             }
-            return $request->withBodyParams($bodyParams);
+            $bodyParams = array_merge($request->getParsedBody(), $bodyParams);
+            return $request->withParsedBody($bodyParams);
         }
 
         return $request;

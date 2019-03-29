@@ -301,25 +301,6 @@ class Request implements ServerRequestInterface
     }
 
     /**
-     * @return mixed
-     */
-    public function getBodyParams()
-    {
-        return $this->bodyParams;
-    }
-
-    /**
-     * @param $data
-     * @return Request
-     */
-    public function withBodyParams($data): self
-    {
-        $clone = $this;
-        $clone->bodyParams = $data;
-        return $clone;
-    }
-
-    /**
      * @return array
      */
     public function getAttributes()
