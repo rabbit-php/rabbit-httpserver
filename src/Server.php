@@ -8,7 +8,9 @@
 
 namespace rabbit\httpserver;
 
+use rabbit\core\ObjectFactory;
 use rabbit\core\SingletonTrait;
+use rabbit\handler\ErrorHandlerInterface;
 use swoole_http_server;
 
 /**
@@ -53,8 +55,17 @@ class Server extends \rabbit\server\Server
      */
     public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response): void
     {
+
         $psrRequest = $this->request['class'];
         $psrResponse = $this->response['class'];
-        $this->dispatcher->dispatch(new $psrRequest($request), new $psrResponse($response));
+        try {
+            $this->dispatcher->dispatch(new $psrRequest($request), new $psrResponse($response));
+        } catch (\Throwable $throw) {
+            /**
+             * @var ErrorHandlerInterface $errorHandler
+             */
+            $errorHandler = ObjectFactory::get('errorHandler');
+            $response = $errorHandler->handle($throw);
+        }
     }
 }
