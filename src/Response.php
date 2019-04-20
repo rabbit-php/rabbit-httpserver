@@ -10,6 +10,7 @@ namespace rabbit\httpserver;
 
 
 use Psr\Http\Message\ResponseInterface;
+use rabbit\helper\FileHelper;
 use rabbit\web\Cookie;
 use rabbit\web\MessageTrait;
 use rabbit\web\SwooleStream;
@@ -279,5 +280,64 @@ class Response implements ResponseInterface
         $clone = $this;
         $clone->attributes[$name] = $value;
         return $clone;
+    }
+
+    /**
+     * @param string $filePath
+     * @param string|null $attachmentName
+     * @param array $options
+     */
+    public function sendFile(string $filePath, string $attachmentName = null, array $options = [])
+    {
+        if (!isset($options['mimeType'])) {
+            $options['mimeType'] = FileHelper::getMimeTypeByExtension($filePath);
+        }
+        if ($attachmentName === null) {
+            $attachmentName = basename($filePath);
+        }
+        $this->swooleResponse->header('Content-disposition', 'attachment; filename="' . urlencode($attachmentName) . '"');
+        $this->swooleResponse->header('Content-Type', $options['mimeType']);
+        $this->swooleResponse->header('Content-Transfer-Encoding', 'binary');
+        $this->swooleResponse->header('Cache-Control', 'must-revalidate');
+        $this->swooleResponse->header('Pragma', 'public');
+        $this->swooleResponse->sendfile($filePath);
+    }
+
+    /**
+     * @param string $tmp
+     * @return bool
+     */
+    public function sendTemp(string $tmp): bool
+    {
+        return $this->swooleResponse->write($tmp);
+    }
+
+    /**
+     * @param string|null $context
+     */
+    public function end(string $context = null): void
+    {
+        if ($context === null) {
+            $this->swooleResponse->end();
+        } else {
+            $this->swooleResponse->end($context);
+        }
+    }
+
+    /**
+     * @return \Swoole\Http\Response
+     */
+    public function getSwooleResponse(): \Swoole\Http\Response
+    {
+        return $this->swooleResponse;
+    }
+
+    /**
+     * @param \Swoole\Http\Response $response
+     * @return Response
+     */
+    public function setSwooleResponse(\Swoole\Http\Response $response): self
+    {
+        $this->swooleResponse = $response;
     }
 }
