@@ -23,6 +23,15 @@ use rabbit\helper\StringHelper;
 class ResponseXmlFormater implements ResponseFormaterInterface
 {
     /**
+     * @var bool whether to interpret objects implementing the [[\Traversable]] interface as arrays.
+     * Defaults to `true`.
+     */
+    public $useTraversableAsArray = true;
+    /**
+     * @var bool if object tags should be added
+     */
+    public $useObjectTags = true;
+    /**
      * @var string the Content-Type header for the response
      */
     private $contentType = 'application/xml';
@@ -42,16 +51,6 @@ class ResponseXmlFormater implements ResponseFormaterInterface
      * @var string the name of the elements that represent the array elements with numeric keys.
      */
     private $itemTag = 'item';
-    /**
-     * @var bool whether to interpret objects implementing the [[\Traversable]] interface as arrays.
-     * Defaults to `true`.
-     */
-    public $useTraversableAsArray = true;
-    /**
-     * @var bool if object tags should be added
-     */
-    public $useObjectTags = true;
-
 
     /**
      * @param ResponseInterface $response
@@ -121,26 +120,6 @@ class ResponseXmlFormater implements ResponseFormaterInterface
     }
 
     /**
-     * Formats scalar value to use in XML text node.
-     *
-     * @param int|string|bool|float $value a scalar value.
-     * @return string string representation of the value.
-     */
-    protected function formatScalarValue($value)
-    {
-        if ($value === true) {
-            return 'true';
-        }
-        if ($value === false) {
-            return 'false';
-        }
-        if (is_float($value)) {
-            return StringHelper::floatToString($value);
-        }
-        return (string)$value;
-    }
-
-    /**
      * Returns element name ready to be used in DOMElement if
      * name is not empty, is not int and is valid.
      *
@@ -173,6 +152,26 @@ class ResponseXmlFormater implements ResponseFormaterInterface
         } catch (DOMException $e) {
             return false;
         }
+    }
+
+    /**
+     * Formats scalar value to use in XML text node.
+     *
+     * @param int|string|bool|float $value a scalar value.
+     * @return string string representation of the value.
+     */
+    protected function formatScalarValue($value)
+    {
+        if ($value === true) {
+            return 'true';
+        }
+        if ($value === false) {
+            return 'false';
+        }
+        if (is_float($value)) {
+            return StringHelper::floatToString($value);
+        }
+        return (string)$value;
     }
 
 }

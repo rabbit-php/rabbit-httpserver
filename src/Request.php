@@ -99,62 +99,22 @@ class Request implements ServerRequestInterface
     }
 
     /**
-     * @param array $files
-     * @return array
+     * @param array $headers
+     * @return $this
      */
-    private static function normalizeFiles(array $files): array
+    private function setHeaders(array $headers): Request
     {
-        $normalized = [];
-
-        foreach ($files as $key => $value) {
-            if ($value instanceof UploadedFileInterface) {
-                $normalized[$key] = $value;
-            } elseif (is_array($value) && isset($value['tmp_name'])) {
-                $normalized[$key] = self::createUploadedFileFromSpec($value);
-            } elseif (is_array($value)) {
-                $normalized[$key] = self::normalizeFiles($value);
-                continue;
-            } else {
-                throw new \InvalidArgumentException('Invalid value in files specification');
+        $this->headers = [];
+        foreach ($headers as $header => $value) {
+            if (!is_array($value)) {
+                $value = [$value];
             }
+
+            $value = $this->trimHeaderValues($value);
+            $normalized = strtolower($header);
+            $this->headers[$normalized] = $value;
         }
-
-        return $normalized;
-    }
-
-    /**
-     * @param array $value
-     * @return array|UploadedFile
-     */
-    private static function createUploadedFileFromSpec(array $value): UploadedFile
-    {
-        if (is_array($value['tmp_name'])) {
-            return self::normalizeNestedFileSpec($value);
-        }
-
-        return new UploadedFile($value['tmp_name'], (int)$value['size'], (int)$value['error'], $value['name'], $value['type']);
-    }
-
-    /**
-     * @param array $files
-     * @return array
-     */
-    private static function normalizeNestedFileSpec(array $files = []): array
-    {
-        $normalizedFiles = [];
-
-        foreach (array_keys($files['tmp_name']) as $key) {
-            $spec = [
-                'tmp_name' => $files['tmp_name'][$key],
-                'size' => $files['size'][$key],
-                'error' => $files['error'][$key],
-                'name' => $files['name'][$key],
-                'type' => $files['type'][$key],
-            ];
-            $normalizedFiles[$key] = self::createUploadedFileFromSpec($spec);
-        }
-
-        return $normalizedFiles;
+        return $this;
     }
 
     /**
@@ -217,6 +177,120 @@ class Request implements ServerRequestInterface
     }
 
     /**
+     * @param array $serverParams
+     * @return Request
+     */
+    public function withServerParams(array $serverParams): Request
+    {
+        $clone = $this;
+        $clone->serverParams = $serverParams;
+        return $clone;
+    }
+
+    /**
+     * @param array $uploadedFiles
+     * @return Request|static
+     */
+    public function withUploadedFiles(array $uploadedFiles)
+    {
+        $clone = $this;
+        $clone->uploadedFiles = $uploadedFiles;
+        return $clone;
+    }
+
+    /**
+     * @param array|null|object $data
+     * @return Request|static
+     */
+    public function withParsedBody($data)
+    {
+        $clone = $this;
+        $clone->parsedBody = $data;
+        return $clone;
+    }
+
+    /**
+     * @param array $query
+     * @return Request|static
+     */
+    public function withQueryParams(array $query)
+    {
+        $clone = $this;
+        $clone->queryParams = $query;
+        return $clone;
+    }
+
+    /**
+     * @param array $cookies
+     * @return Request|static
+     */
+    public function withCookieParams(array $cookies)
+    {
+        $clone = $this;
+        $clone->cookieParams = $cookies;
+        return $clone;
+    }
+
+    /**
+     * @param array $files
+     * @return array
+     */
+    private static function normalizeFiles(array $files): array
+    {
+        $normalized = [];
+
+        foreach ($files as $key => $value) {
+            if ($value instanceof UploadedFileInterface) {
+                $normalized[$key] = $value;
+            } elseif (is_array($value) && isset($value['tmp_name'])) {
+                $normalized[$key] = self::createUploadedFileFromSpec($value);
+            } elseif (is_array($value)) {
+                $normalized[$key] = self::normalizeFiles($value);
+                continue;
+            } else {
+                throw new \InvalidArgumentException('Invalid value in files specification');
+            }
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * @param array $value
+     * @return array|UploadedFile
+     */
+    private static function createUploadedFileFromSpec(array $value): UploadedFile
+    {
+        if (is_array($value['tmp_name'])) {
+            return self::normalizeNestedFileSpec($value);
+        }
+
+        return new UploadedFile($value['tmp_name'], (int)$value['size'], (int)$value['error'], $value['name'], $value['type']);
+    }
+
+    /**
+     * @param array $files
+     * @return array
+     */
+    private static function normalizeNestedFileSpec(array $files = []): array
+    {
+        $normalizedFiles = [];
+
+        foreach (array_keys($files['tmp_name']) as $key) {
+            $spec = [
+                'tmp_name' => $files['tmp_name'][$key],
+                'size' => $files['size'][$key],
+                'error' => $files['error'][$key],
+                'name' => $files['name'][$key],
+                'type' => $files['type'][$key],
+            ];
+            $normalizedFiles[$key] = self::createUploadedFileFromSpec($spec);
+        }
+
+        return $normalizedFiles;
+    }
+
+    /**
      * @return array
      */
     public function getServerParams()
@@ -233,33 +307,11 @@ class Request implements ServerRequestInterface
     }
 
     /**
-     * @param array $cookies
-     * @return Request|static
-     */
-    public function withCookieParams(array $cookies)
-    {
-        $clone = $this;
-        $clone->cookieParams = $cookies;
-        return $clone;
-    }
-
-    /**
      * @return array
      */
     public function getQueryParams()
     {
         return $this->queryParams;
-    }
-
-    /**
-     * @param array $query
-     * @return Request|static
-     */
-    public function withQueryParams(array $query)
-    {
-        $clone = $this;
-        $clone->queryParams = $query;
-        return $clone;
     }
 
     /**
@@ -271,33 +323,11 @@ class Request implements ServerRequestInterface
     }
 
     /**
-     * @param array $uploadedFiles
-     * @return Request|static
-     */
-    public function withUploadedFiles(array $uploadedFiles)
-    {
-        $clone = $this;
-        $clone->uploadedFiles = $uploadedFiles;
-        return $clone;
-    }
-
-    /**
      * @return array|null|object
      */
     public function getParsedBody()
     {
         return $this->parsedBody;
-    }
-
-    /**
-     * @param array|null|object $data
-     * @return Request|static
-     */
-    public function withParsedBody($data)
-    {
-        $clone = $this;
-        $clone->parsedBody = $data;
-        return $clone;
     }
 
     /**
@@ -432,36 +462,6 @@ class Request implements ServerRequestInterface
         }
 
         return $clone;
-    }
-
-    /**
-     * @param array $serverParams
-     * @return Request
-     */
-    public function withServerParams(array $serverParams): Request
-    {
-        $clone = $this;
-        $clone->serverParams = $serverParams;
-        return $clone;
-    }
-
-    /**
-     * @param array $headers
-     * @return $this
-     */
-    private function setHeaders(array $headers): Request
-    {
-        $this->headers = [];
-        foreach ($headers as $header => $value) {
-            if (!is_array($value)) {
-                $value = [$value];
-            }
-
-            $value = $this->trimHeaderValues($value);
-            $normalized = strtolower($header);
-            $this->headers[$normalized] = $value;
-        }
-        return $this;
     }
 
     /**

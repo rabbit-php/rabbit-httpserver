@@ -18,7 +18,6 @@ use rabbit\web\SwooleStream;
 class Response implements ResponseInterface
 {
     use MessageTrait;
-
     /**
      * @var array
      */
@@ -82,7 +81,8 @@ class Response implements ResponseInterface
         508 => 'Loop Detected',
         511 => 'Network Authentication Required',
     ];
-
+    /** @var bool */
+    private $_isSend = false;
     /**
      * swoole响应请求
      *
@@ -125,14 +125,6 @@ class Response implements ResponseInterface
     }
 
     /**
-     * @return int
-     */
-    public function getStatusCode()
-    {
-        return $this->statusCode;
-    }
-
-    /**
      * @param int $code
      * @param string $reasonPhrase
      * @return Response|static
@@ -161,13 +153,11 @@ class Response implements ResponseInterface
      */
     public function send(): void
     {
-        $response = $this;
-
         /**
          * Headers
          */
         // Write Headers to swoole response
-        foreach ($response->getHeaders() as $key => $value) {
+        foreach ($this->getHeaders() as $key => $value) {
             if (is_array($value)) {
                 $this->swooleResponse->header($key, implode(';', $value));
             } else {
@@ -191,12 +181,20 @@ class Response implements ResponseInterface
         /**
          * Status code
          */
-        $this->swooleResponse->status($response->getStatusCode());
+        $this->swooleResponse->status($this->getStatusCode());
 
         /**
          * Body
          */
-        $this->swooleResponse->end($response->getBody()->getContents());
+        $this->swooleResponse->end($this->getBody()->getContents());
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusCode()
+    {
+        return $this->statusCode;
     }
 
     /**
@@ -287,8 +285,11 @@ class Response implements ResponseInterface
      * @param string|null $attachmentName
      * @param array $options
      */
-    public function sendFile(string $filePath, string $attachmentName = null, array $options = [])
+    public function sendFile(string $filePath, string $attachmentName = null, array $options = []): void
     {
+        if ($this->_isSend) {
+            return;
+        }
         if (!isset($options['mimeType'])) {
             $options['mimeType'] = FileHelper::getMimeTypeByExtension($filePath);
         }
@@ -301,27 +302,19 @@ class Response implements ResponseInterface
         $this->swooleResponse->header('Cache-Control', 'must-revalidate');
         $this->swooleResponse->header('Pragma', 'public');
         $this->swooleResponse->sendfile($filePath);
+        $this->_isSend = true;
     }
 
     /**
-     * @param string $tmp
+     * @param string $chuck
      * @return bool
      */
-    public function sendTemp(string $tmp): bool
+    public function sendChuck(string $chuck): bool
     {
-        return $this->swooleResponse->write($tmp);
-    }
-
-    /**
-     * @param string|null $context
-     */
-    public function end(string $context = null): void
-    {
-        if ($context === null) {
-            $this->swooleResponse->end();
-        } else {
-            $this->swooleResponse->end($context);
+        if ($this->_isSend) {
+            return false;
         }
+        return $this->swooleResponse->write($chuck);
     }
 
     /**

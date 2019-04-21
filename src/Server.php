@@ -30,24 +30,6 @@ class Server extends \rabbit\server\Server
     private $response;
 
     /**
-     * @return \Swoole\Server
-     */
-    protected function createServer(): \Swoole\Server
-    {
-        return new swoole_http_server($this->host, $this->port, $this->type);
-    }
-
-    /**
-     * @throws \Exception
-     */
-    protected function startServer(\Swoole\Server $server = null): void
-    {
-        parent::startServer($server);
-        $server->on('request', [$this, 'onRequest']);
-        $server->start();
-    }
-
-    /**
      * 执行请求
      *
      * @param swoole_http_request $request
@@ -67,5 +49,23 @@ class Server extends \rabbit\server\Server
             $errorHandler = ObjectFactory::get('errorHandler');
             $response = $errorHandler->handle($throw);
         }
+    }
+
+    /**
+     * @return \Swoole\Server
+     */
+    protected function createServer(): \Swoole\Server
+    {
+        return new swoole_http_server($this->host, $this->port, $this->type);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    protected function startServer(\Swoole\Server $server = null): void
+    {
+        parent::startServer($server);
+        $server->on('request', [$this, 'onRequest']);
+        $server->start();
     }
 }
