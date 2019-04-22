@@ -149,13 +149,10 @@ class Response implements ResponseInterface
     }
 
     /**
-     * 处理 Response 并发送数据
+     *
      */
-    public function send(): void
+    public function sendHeaders(): void
     {
-        /**
-         * Headers
-         */
         // Write Headers to swoole response
         foreach ($this->getHeaders() as $key => $value) {
             if (is_array($value)) {
@@ -164,10 +161,13 @@ class Response implements ResponseInterface
                 $this->swooleResponse->header($key, $value);
             }
         }
+    }
 
-        /**
-         * Cookies
-         */
+    /**
+     *
+     */
+    public function sendCookies(): void
+    {
         foreach ((array)$this->cookies as $domain => $paths) {
             foreach ($paths ?? [] as $path => $item) {
                 foreach ($item ?? [] as $name => $cookie) {
@@ -177,6 +177,22 @@ class Response implements ResponseInterface
                 }
             }
         }
+    }
+
+    /**
+     * 处理 Response 并发送数据
+     */
+    public function send(): void
+    {
+        /**
+         * Headers
+         */
+        $this->sendHeaders();
+
+        /**
+         * Cookies
+         */
+        $this->sendCookies();
 
         /**
          * Status code
