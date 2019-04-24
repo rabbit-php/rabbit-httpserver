@@ -131,7 +131,7 @@ class Response implements ResponseInterface
      */
     public function withStatus($code, $reasonPhrase = '')
     {
-        $clone = $this;
+        $clone = &$this;
         $clone->statusCode = (int)$code;
         if (!$reasonPhrase && isset(self::$phrases[$code])) {
             $reasonPhrase = self::$phrases[$code];
@@ -223,7 +223,7 @@ class Response implements ResponseInterface
             return $this;
         }
 
-        $clone = $this;
+        $clone = &$this;
         $clone->stream = new SwooleStream($content);
         return $clone;
     }
@@ -234,7 +234,7 @@ class Response implements ResponseInterface
      */
     public function withCookie(Cookie $cookie): Response
     {
-        $clone = $this;
+        $clone = &$this;
         $clone->cookies[$cookie->getDomain()][$cookie->getPath()][$cookie->getName()] = $cookie;
         return $clone;
     }
@@ -291,7 +291,7 @@ class Response implements ResponseInterface
      */
     public function withAttribute(string $name, $value): Response
     {
-        $clone = $this;
+        $clone = &$this;
         $clone->attributes[$name] = $value;
         return $clone;
     }
