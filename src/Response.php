@@ -15,6 +15,10 @@ use rabbit\web\Cookie;
 use rabbit\web\MessageTrait;
 use rabbit\web\SwooleStream;
 
+/**
+ * Class Response
+ * @package rabbit\httpserver
+ */
 class Response implements ResponseInterface
 {
     use MessageTrait;
@@ -172,7 +176,9 @@ class Response implements ResponseInterface
             foreach ($paths ?? [] as $path => $item) {
                 foreach ($item ?? [] as $name => $cookie) {
                     if ($cookie instanceof Cookie) {
-                        $this->swooleResponse->cookie($cookie->getName(), $cookie->getValue() ?: 1, $cookie->getExpiresTime(), $cookie->getPath(), $cookie->getDomain(), $cookie->isSecure(), $cookie->isHttpOnly());
+                        $this->swooleResponse->cookie($cookie->getName(), $cookie->getValue() ?: 1,
+                            $cookie->getExpiresTime(), $cookie->getPath(), $cookie->getDomain(), $cookie->isSecure(),
+                            $cookie->isHttpOnly());
                     }
                 }
             }
@@ -240,15 +246,6 @@ class Response implements ResponseInterface
     }
 
     /**
-     * @param $value
-     * @return bool
-     */
-    public function isArrayable($value): bool
-    {
-        return is_array($value) || $value instanceof Arrayable;
-    }
-
-    /**
      * @return string
      */
     public function getCharset(): string
@@ -312,7 +309,8 @@ class Response implements ResponseInterface
         if ($attachmentName === null) {
             $attachmentName = basename($filePath);
         }
-        $this->swooleResponse->header('Content-disposition', 'attachment; filename="' . urlencode($attachmentName) . '"');
+        $this->swooleResponse->header('Content-disposition',
+            'attachment; filename="' . urlencode($attachmentName) . '"');
         $this->swooleResponse->header('Content-Type', $options['mimeType']);
         $this->swooleResponse->header('Content-Transfer-Encoding', 'binary');
         $this->swooleResponse->header('Cache-Control', 'must-revalidate');

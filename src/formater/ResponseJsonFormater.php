@@ -31,10 +31,7 @@ class ResponseJsonFormater implements ResponseFormaterInterface
         $response = $response->withCharset($response->getCharset() ?? "UTF-8");
 
         // Content
-        if (!$response->isArrayable($data) || !is_object($data)) {
-            $data = ['data' => $data];
-        }
-        $data = ArrayHelper::toArray($data);
+        $data = ArrayHelper::toArray(['data' => $data]);
         $content = JsonHelper::encode($data, JSON_UNESCAPED_UNICODE);
         $response = $response->withContent($content);
 
