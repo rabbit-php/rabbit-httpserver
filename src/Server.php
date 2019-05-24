@@ -40,14 +40,20 @@ class Server extends \rabbit\server\Server
 
         $psrRequest = $this->request['class'];
         $psrResponse = $this->response['class'];
+        $psrResponse = new $psrResponse($response);
         try {
-            $this->dispatcher->dispatch(new $psrRequest($request), new $psrResponse($response));
+            $this->dispatcher->dispatch(new $psrRequest($request), $psrResponse);
         } catch (\Throwable $throw) {
-            /**
-             * @var ErrorHandlerInterface $errorHandler
-             */
-            $errorHandler = ObjectFactory::get('errorHandler');
-            $response = $errorHandler->handle($throw);
+            try {
+                /**
+                 * @var ErrorHandlerInterface $errorHandler
+                 */
+                $errorHandler = ObjectFactory::get('errorHandler');
+                $errorHandler->handle($throw, $psrResponse)->send();
+            } catch (\Throwable $throwable) {
+                $response->status(500);
+                $response->end("An internal server error occurred.");
+            }
         }
     }
 
