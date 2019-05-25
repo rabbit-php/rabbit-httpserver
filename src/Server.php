@@ -28,6 +28,8 @@ class Server extends \rabbit\server\Server
      * @var string
      */
     private $response;
+    /** @var callable */
+    private $errorResponse;
 
     /**
      * 执行请求
@@ -50,8 +52,12 @@ class Server extends \rabbit\server\Server
                 $errorHandler = ObjectFactory::get('errorHandler');
                 $errorHandler->handle($throw)->send();
             } catch (\Throwable $throwable) {
-                $response->status(500);
-                $response->end("An internal server error occurred.");
+                if (is_callable($this->errorResponse)) {
+                    call_user_func($this->errorResponse, $response, $throwable);
+                } else {
+                    $response->status(500);
+                    $response->end("An internal server error occurred.");
+                }
             }
         }
     }
