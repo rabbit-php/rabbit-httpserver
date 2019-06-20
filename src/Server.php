@@ -11,7 +11,7 @@ namespace rabbit\httpserver;
 use rabbit\core\ObjectFactory;
 use rabbit\core\SingletonTrait;
 use rabbit\handler\ErrorHandlerInterface;
-use swoole_http_server;
+use Swoole\Http\Server;
 
 /**
  * Class Server
@@ -32,10 +32,8 @@ class Server extends \rabbit\server\Server
     private $errorResponse;
 
     /**
-     * 执行请求
-     *
-     * @param swoole_http_request $request
-     * @param swoole_http_response $response
+     * @param \Swoole\Http\Request $request
+     * @param \Swoole\Http\Response $response
      */
     public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response): void
     {
@@ -67,7 +65,7 @@ class Server extends \rabbit\server\Server
      */
     protected function createServer(): \Swoole\Server
     {
-        return new swoole_http_server($this->host, $this->port, $this->type);
+        return new Swoole\Http\Server($this->host, $this->port, $this->type);
     }
 
     /**
