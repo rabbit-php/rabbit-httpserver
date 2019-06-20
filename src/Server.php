@@ -11,7 +11,6 @@ namespace rabbit\httpserver;
 use rabbit\core\ObjectFactory;
 use rabbit\core\SingletonTrait;
 use rabbit\handler\ErrorHandlerInterface;
-use Swoole\Http\Server;
 
 /**
  * Class Server
@@ -65,7 +64,7 @@ class Server extends \rabbit\server\Server
      */
     protected function createServer(): \Swoole\Server
     {
-        return new Swoole\Http\Server($this->host, $this->port, $this->type);
+        return new \Swoole\Http\Server($this->host, $this->port, $this->type);
     }
 
     /**
