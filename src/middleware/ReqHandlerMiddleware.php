@@ -34,8 +34,8 @@ class ReqHandlerMiddleware implements MiddlewareInterface
         if (count($route) !== 2) {
             throw new NotFoundHttpException("the route type error:" . $request->getUri()->getPath());
         }
-        list($module, $handler) = $route;
-        $class = 'apis\\' . $module . "\\handlers\\" . $handler;
+        list($module, $action) = $route;
+        $class = 'apis\\' . $module . "\\handlers\\" . $action;
 
         $class = getDI($class, false);
         if ($class === null) {
@@ -50,9 +50,9 @@ class ReqHandlerMiddleware implements MiddlewareInterface
              * @var ResponseInterface $newResponse
              */
             $newResponse = Context::get('response');
-            $response = $newResponse->withAttribute(AttributeEnum::RESPONSE_ATTRIBUTE, $response);
+            $newResponse->withAttribute(AttributeEnum::RESPONSE_ATTRIBUTE, $response);
         }
 
-        return $response;
+        return $handler->handle($request);
     }
 }

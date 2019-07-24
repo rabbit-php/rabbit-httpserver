@@ -59,10 +59,10 @@ class EndMiddleware implements MiddlewareInterface
              * @var ResponseInterface $newResponse
              */
             $newResponse = Context::get('response');
-            $response = $newResponse->withAttribute(AttributeEnum::RESPONSE_ATTRIBUTE, $response);
+            $newResponse->withAttribute(AttributeEnum::RESPONSE_ATTRIBUTE, $response);
         }
 
-        return $response;
+        return $handler->handle($request);
     }
 
 }
