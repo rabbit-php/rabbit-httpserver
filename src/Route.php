@@ -21,6 +21,8 @@ class Route implements RouteInterface
      * @var DispatcherInterface
      */
     protected $dispatcher;
+    /** @var array */
+    protected $routes = [];
 
     /**
      * Route constructor.
