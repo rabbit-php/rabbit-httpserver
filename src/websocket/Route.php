@@ -3,7 +3,6 @@
 
 namespace rabbit\httpserver\websocket;
 
-
 use rabbit\contract\DispatcherInterface;
 use rabbit\handler\ErrorHandlerInterface;
 use rabbit\helper\JsonHelper;
@@ -47,7 +46,8 @@ class Route implements RouteInterface
     {
         foreach ($this->routes as $handShake => $route) {
             foreach ($route as $item) {
-                $server->handle($item,
+                $server->handle(
+                    $item,
                     function (\Swoole\Http\Request $request, \Swoole\Http\Response $response) use (
                         $handShake,
                         $item
@@ -76,7 +76,6 @@ class Route implements RouteInterface
                                 $data = JsonHelper::decode($frame->data, true);
                                 $this->dispatcher->dispatch($psrRequest, $psrResponse);
                             }
-
                         } catch (\Throwable $throw) {
                             /**
                              * @var ErrorHandlerInterface $errorHandler
@@ -84,7 +83,8 @@ class Route implements RouteInterface
                             $errorHandler = getDI('errorHandler');
                             $errorHandler->handle($throw)->send();
                         }
-                    });
+                    }
+                );
             }
         }
     }

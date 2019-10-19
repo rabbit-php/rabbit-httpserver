@@ -8,7 +8,6 @@
 
 namespace rabbit\httpserver\formater;
 
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use rabbit\core\ObjectFactory;
@@ -84,5 +83,4 @@ class ResponseFormater implements IResponseFormatTool
             'application/xml' => ResponseXmlFormater::class,
         ];
     }
-
 }

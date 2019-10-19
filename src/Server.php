@@ -36,7 +36,6 @@ class Server extends \rabbit\server\Server
      */
     public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response): void
     {
-
         $psrRequest = $this->request['class'];
         $psrResponse = $this->response['class'];
         try {

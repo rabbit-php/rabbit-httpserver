@@ -8,7 +8,6 @@
 
 namespace rabbit\httpserver\formater;
 
-
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -31,5 +30,4 @@ class ResponseRawFormater implements ResponseFormaterInterface
 
         return $response;
     }
-
 }

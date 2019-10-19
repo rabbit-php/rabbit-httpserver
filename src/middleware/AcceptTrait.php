@@ -38,5 +38,4 @@ trait AcceptTrait
         $response = $this->formater->format($request, $response);
         return $response;
     }
-
 }

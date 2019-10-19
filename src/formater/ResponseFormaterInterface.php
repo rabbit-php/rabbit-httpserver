@@ -8,7 +8,6 @@
 
 namespace rabbit\httpserver\formater;
 
-
 use Psr\Http\Message\ResponseInterface;
 
 /**

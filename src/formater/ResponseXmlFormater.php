@@ -173,5 +173,4 @@ class ResponseXmlFormater implements ResponseFormaterInterface
         }
         return (string)$value;
     }
-
 }

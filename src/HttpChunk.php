@@ -3,7 +3,6 @@
 
 namespace rabbit\httpserver;
 
-
 /**
  * Class HttpChunk
  * @package common\Server

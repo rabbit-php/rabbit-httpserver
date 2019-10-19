@@ -8,7 +8,6 @@
 
 namespace rabbit\httpserver\websocket;
 
-
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use rabbit\helper\ArrayHelper;
@@ -95,8 +94,11 @@ class Request implements ServerRequestInterface
             $this->method = strtoupper($server['request_method'] ?? 'GET');
             $this->setHeaders($swooleRequest->header ?? []);
             $this->uri = self::getUriFromGlobals($swooleRequest);
-            $this->protocol = isset($server['server_protocol']) ? str_replace('HTTP/', '',
-                $server['server_protocol']) : '1.1';
+            $this->protocol = isset($server['server_protocol']) ? str_replace(
+                'HTTP/',
+                '',
+                $server['server_protocol']
+            ) : '1.1';
 
             $this->withCookieParams($swooleRequest->cookie ?? [])
                 ->withServerParams($server ?? [])
@@ -474,5 +476,4 @@ class Request implements ServerRequestInterface
         $this->swooleRequest = $swooleRequest;
         return $this;
     }
-
 }

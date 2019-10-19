@@ -8,7 +8,6 @@
 
 namespace rabbit\httpserver\middleware;
 
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -64,5 +63,4 @@ class EndMiddleware implements MiddlewareInterface
 
         return $handler->handle($request);
     }
-
 }

@@ -3,7 +3,6 @@
 
 namespace rabbit\httpserver\websocket;
 
-
 use rabbit\App;
 use rabbit\httpserver\CoServer;
 
@@ -23,8 +22,10 @@ class MsgModel
         $server = App::getServer();
         $responses = $server->wsRoute->getSwooleResponses();
         foreach ($responses as $fd => $response) {
-            $response->push(is_string($this->params) ? $this->params : json_encode($this->params,
-                JSON_UNESCAPED_UNICODE));
+            $response->push(is_string($this->params) ? $this->params : json_encode(
+                $this->params,
+                JSON_UNESCAPED_UNICODE
+            ));
         }
     }
 }

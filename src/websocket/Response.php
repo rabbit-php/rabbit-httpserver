@@ -8,7 +8,6 @@
 
 namespace rabbit\httpserver\websocket;
 
-
 use Psr\Http\Message\ResponseInterface;
 use rabbit\exception\NotSupportedException;
 use rabbit\helper\ArrayHelper;
@@ -161,5 +160,4 @@ class Response implements ResponseInterface
         $this->charset = $charset;
         return $this;
     }
-
 }

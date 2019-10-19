@@ -3,7 +3,6 @@
 
 namespace rabbit\httpserver;
 
-
 use rabbit\contract\DispatcherInterface;
 use rabbit\handler\ErrorHandlerInterface;
 use rabbit\helper\ClassHelper;
@@ -39,9 +38,12 @@ class Route implements RouteInterface
                     }
                     $class = ClassHelper::getClassByString(file_get_contents($path));
                     $list = explode('\\', $class);
-                    if (array_intersect($list, $include)) {
-                        $route = str_replace(array_merge(['\\', $remove], $include),
-                            ['/'], $class);
+                    if (array_intersect($list, $include + [$remove])) {
+                        $route = str_replace(
+                            array_merge(['\\', $remove], $include),
+                            ['/'],
+                            $class
+                        );
                         $route = strtolower($prefix . str_replace('//', '/', $route));
                         $this->routes[$route] = $class;
                     }
@@ -59,7 +61,8 @@ class Route implements RouteInterface
     public function handle($server)
     {
         foreach ($this->routes as $route => $handler) {
-            $server->handle($route,
+            $server->handle(
+                $route,
                 function (\Swoole\Http\Request $request, \Swoole\Http\Response $response) use ($handler) {
                     try {
                         $psrRequest = new Request($request);
@@ -73,7 +76,8 @@ class Route implements RouteInterface
                         $errorHandler = getDI('errorHandler');
                         $errorHandler->handle($throw)->send();
                     }
-                });
+                }
+            );
         }
     }
 }
