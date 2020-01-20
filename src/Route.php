@@ -63,10 +63,12 @@ class Route implements RouteInterface
         foreach ($this->routes as $route => $handler) {
             $server->handle(
                 $route,
-                function (\Swoole\Http\Request $request, \Swoole\Http\Response $response) use ($handler) {
+                function (\Swoole\Http\Request $request, \Swoole\Http\Response $response) use ($route, $handler) {
                     try {
                         $psrRequest = new Request($request);
-                        $psrRequest->withAttribute(self::ROUTE_CLASS, $handler);
+                        if ($route === $request->server['request_uri']) {
+                            $psrRequest->withAttribute(self::ROUTE_CLASS, $handler);
+                        }
                         $psrResponse = new Response($response);
                         $this->dispatcher->dispatch($psrRequest, $psrResponse);
                     } catch (\Throwable $throw) {
