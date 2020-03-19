@@ -19,7 +19,7 @@ class IPHelper
      * @param ServerRequestInterface $request
      * @return string
      */
-    public function getClientIp(ServerRequestInterface $request)
+    public static function getClientIp(ServerRequestInterface $request)
     {
         if ($ip = $request->getHeaderLine('X-REAL-IP')) {
             return $ip;
