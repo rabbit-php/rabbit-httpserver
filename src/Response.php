@@ -327,6 +327,42 @@ class Response implements ResponseInterface
     }
 
     /**
+     * @param string $content
+     * @param string|null $attachmentName
+     * @param array $options
+     */
+    public function sendFileContent(string $content, string $attachmentName, array $options = []): void
+    {
+        if ($this->_isSend) {
+            return;
+        }
+        try {
+            if (!isset($options['mimeType'])) {
+                $options['mimeType'] = FileHelper::getMimeTypeByExtension($attachmentName);
+            }
+            $this->swooleResponse->header(
+                'Content-disposition',
+                'attachment; filename="' . urlencode($attachmentName) . '"'
+            );
+            $this->swooleResponse->header('Content-Type', $options['mimeType']);
+            $this->swooleResponse->header('Content-Transfer-Encoding', 'binary');
+            $this->swooleResponse->header('Cache-Control', 'must-revalidate');
+            $this->swooleResponse->header('Pragma', 'public');
+            $this->sendHeaders();
+            $this->sendCookies();
+
+            $len = 4096;
+            while (!empty($content)) {
+                $this->sendChuck(substr($content, 0, $len));
+                $content = substr($content, $len);
+            }
+        } finally {
+            $this->swooleResponse->end();
+            $this->_isSend = true;
+        }
+    }
+
+    /**
      * @param string $chuck
      * @return bool
      */
