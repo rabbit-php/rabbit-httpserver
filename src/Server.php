@@ -12,7 +12,7 @@ use Rabbit\Web\ErrorHandlerInterface;
  * Class Server
  * @package Rabbit\HttpServer
  */
-class Server extends \rabbit\server\Server
+class Server extends \Rabbit\Server\Server
 {
     /**
      * @var string
@@ -24,7 +24,7 @@ class Server extends \rabbit\server\Server
      */
     private string $response = Response::class;
     /** @var callable */
-    private $errorResponse;
+    protected $errorResponse;
 
     /**
      * @param \Swoole\Http\Request $request
