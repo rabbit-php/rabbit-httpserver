@@ -1,29 +1,30 @@
 <?php
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use rabbit\core\ObjectFactory;
-use rabbit\httpserver\formater\IResponseFormatTool;
-use rabbit\httpserver\formater\ResponseFormater;
+use Rabbit\HttpServer\Formater\IResponseFormatTool;
+use Rabbit\HttpServer\Formater\ResponseFormater;
+use Throwable;
 
 /**
  * Trait AcceptTrait
- * @package rabbit\httpserver\middleware
+ * @package Rabbit\HttpServer\Middleware
  */
 trait AcceptTrait
 {
     /**
      * @var IResponseFormatTool
      */
-    protected $formater = ResponseFormater::class;
+    protected IResponseFormatTool $formater;
 
     /**
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @return \Psr\Http\Message\ResponseInterface|Response
-     * @throws \InvalidArgumentException
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     * @throws Throwable
      */
     protected function handleAccept(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
@@ -31,8 +32,8 @@ trait AcceptTrait
         if (!$response instanceof ResponseInterface) {
             return $response;
         }
-        if (is_string($this->formater)) {
-            $this->formater = ObjectFactory::get($this->formater);
+        if ($this->formater === null) {
+            $this->formater = getDI(ResponseFormater::class);
         }
 
         $response = $this->formater->format($request, $response);

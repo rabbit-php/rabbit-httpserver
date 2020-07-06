@@ -7,16 +7,16 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use rabbit\core\Context;
+use Rabbit\Base\Core\Context;
 
 /**
  * Class HealthCheckMiddleware
- * @package rabbit\httpserver\middleware
+ * @package Rabbit\HttpServer\Middleware
  */
 class HealthCheckMiddleware implements MiddlewareInterface
 {
     /** @var string */
-    protected $health;
+    protected ?string $health;
 
     /**
      * ReqHandlerMiddleware constructor.

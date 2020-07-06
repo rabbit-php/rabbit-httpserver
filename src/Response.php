@@ -1,15 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/9
- * Time: 16:53
- */
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer;
 
 use Psr\Http\Message\ResponseInterface;
-use rabbit\helper\FileHelper;
+use Rabbit\Base\Helper\FileHelper;
 use rabbit\web\Cookie;
 use rabbit\web\MessageTrait;
 use rabbit\web\SwooleStream;
@@ -24,7 +19,7 @@ class Response implements ResponseInterface
     /**
      * @var array
      */
-    public static $phrases = [
+    public static array $phrases = [
         100 => 'Continue',
         101 => 'Switching Protocols',
         102 => 'Processing',
@@ -85,38 +80,38 @@ class Response implements ResponseInterface
         511 => 'Network Authentication Required',
     ];
     /** @var bool */
-    private $_isSend = false;
+    private bool $_isSend = false;
     /**
      * swoole响应请求
      *
      * @var \Swoole\Http\Response
      */
-    private $swooleResponse;
+    private \Swoole\Http\Response $swooleResponse;
 
     /**
      * @var string
      */
-    private $reasonPhrase = '';
+    private string $reasonPhrase = '';
 
     /**
      * @var int
      */
-    private $statusCode = 200;
+    private int $statusCode = 200;
 
     /**
      * @var string
      */
-    private $charset = 'utf-8';
+    private string $charset = 'utf-8';
 
     /**
      * @var array
      */
-    private $attributes = [];
+    private array $attributes = [];
 
     /**
      * @var array
      */
-    private $cookies = [];
+    private array $cookies = [];
 
     /**
      * Response constructor.

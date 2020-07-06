@@ -1,25 +1,25 @@
 <?php
-
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer;
 
-use rabbit\App;
-use rabbit\exception\InvalidArgumentException;
-use rabbit\server\Server;
+
+use Exception;
+use Rabbit\Base\Exception\InvalidArgumentException;
 
 /**
  * Class CoServer
- * @package rabbit\httpserver
+ * @package Rabbit\HttpServer
  */
 class CoServer extends \rabbit\server\CoServer
 {
     /** @var RouteInterface */
-    public $route;
+    public RouteInterface $route;
     /** @var RouteInterface */
-    public $wsRoute;
+    public RouteInterface $wsRoute;
 
     /**
-     * @return Server
+     * @return \Co\Http\Server
      */
     protected function createServer()
     {
@@ -27,7 +27,7 @@ class CoServer extends \rabbit\server\CoServer
     }
 
     /**
-     * @throws \Exception
+     * @param null $server
      */
     protected function startServer($server = null): void
     {

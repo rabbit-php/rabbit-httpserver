@@ -1,20 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/9
- * Time: 13:34
- */
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
-use rabbit\web\MessageTrait;
-use rabbit\web\SwooleStream;
-use rabbit\web\UploadedFile;
-use rabbit\web\Uri;
+use Rabbit\Web\MessageTrait;
+use Rabbit\Web\SwooleStream;
+use Rabbit\Web\Uri;
 
 class Request implements ServerRequestInterface
 {
@@ -22,17 +16,17 @@ class Request implements ServerRequestInterface
     /**
      * @var \Swoole\Http\Request
      */
-    protected $swooleRequest;
+    protected \Swoole\Http\Request $swooleRequest;
 
     /**
      * @var array
      */
-    private $attributes = [];
+    private array $attributes = [];
 
     /**
      * @var array
      */
-    private $cookieParams = [];
+    private array $cookieParams = [];
 
     /**
      * @var null|array|object
@@ -49,17 +43,17 @@ class Request implements ServerRequestInterface
     /**
      * @var array
      */
-    private $queryParams = [];
+    private array $queryParams = [];
 
     /**
      * @var array
      */
-    private $serverParams = [];
+    private array $serverParams = [];
 
     /**
      * @var array
      */
-    private $uploadedFiles = [];
+    private array $uploadedFiles = [];
 
     /**
      * @var string
@@ -67,14 +61,14 @@ class Request implements ServerRequestInterface
     private $method;
 
     /**
-     * @var UriInterface|Uri
+     * @var UriInterface
      */
-    private $uri;
+    private UriInterface $uri;
 
     /**
      * @var string
      */
-    private $requestTarget;
+    private string $requestTarget;
 
     /**
      * Request constructor.

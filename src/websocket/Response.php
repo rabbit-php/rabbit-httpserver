@@ -1,21 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/20
- * Time: 22:48
- */
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\WebSocket;
 
+use Exception;
 use Psr\Http\Message\ResponseInterface;
-use rabbit\exception\NotSupportedException;
-use rabbit\helper\ArrayHelper;
-use rabbit\web\MessageTrait;
+use Rabbit\Base\Exception\NotSupportedException;
+use Rabbit\Base\Helper\ArrayHelper;
+use Rabbit\Web\MessageTrait;
 
 /**
  * Class Response
- * @package rabbit\wsserver
+ * @package Rabbit\HttpServer\WebSocket
  */
 class Response implements ResponseInterface
 {
@@ -25,17 +21,17 @@ class Response implements ResponseInterface
     /**
      * @var array
      */
-    private $attributes = [];
+    private array $attributes = [];
     /**
      * @var int
      */
-    private $statusCode = 200;
+    private int $statusCode = 200;
     /**
      * @var string
      */
-    private $charset = 'utf-8';
+    private string $charset = 'utf-8';
     /** @var \Swoole\Http\Response */
-    protected $swooleResponse;
+    protected \Swoole\Http\Response $swooleResponse;
 
     /**
      * Response constructor.
@@ -136,11 +132,11 @@ class Response implements ResponseInterface
     /**
      * @param int $fd
      * @param string $msg
-     * @throws \Exception
+     * @throws Exception
      */
     public function push(int $fd, string $msg): void
     {
-        (new \Swoole\Http\Response($fd))->push($message);
+        (new \Swoole\Http\Response($fd))->push($msg);
     }
 
     /**

@@ -1,20 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/15
- * Time: 13:52
- */
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Formater;
 
 use Psr\Http\Message\ResponseInterface;
-use rabbit\helper\ArrayHelper;
-use rabbit\helper\JsonHelper;
+use Rabbit\Base\Helper\ArrayHelper;
+use Rabbit\Base\Helper\JsonHelper;
 
 /**
  * Class ResponseJsonFormater
- * @package rabbit\httpserver\formater
+ * @package Rabbit\HttpServer\Formater
  */
 class ResponseJsonFormater implements ResponseFormaterInterface
 {

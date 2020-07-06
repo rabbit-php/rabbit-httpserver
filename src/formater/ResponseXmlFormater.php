@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/15
- * Time: 14:06
- */
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Formater;
 
@@ -13,12 +8,12 @@ use DOMElement;
 use DOMException;
 use DOMText;
 use Psr\Http\Message\ResponseInterface;
-use rabbit\contract\Arrayable;
-use rabbit\helper\StringHelper;
+use Rabbit\Base\Contract\ArrayAble;
+use Rabbit\Base\Helper\StringHelper;
 
 /**
  * Class ResponseXmlFormater
- * @package rabbit\httpserver\formater
+ * @package Rabbit\HttpServer\Formater
  */
 class ResponseXmlFormater implements ResponseFormaterInterface
 {
@@ -26,41 +21,39 @@ class ResponseXmlFormater implements ResponseFormaterInterface
      * @var bool whether to interpret objects implementing the [[\Traversable]] interface as arrays.
      * Defaults to `true`.
      */
-    public $useTraversableAsArray = true;
+    public bool $useTraversableAsArray = true;
     /**
      * @var bool if object tags should be added
      */
-    public $useObjectTags = true;
+    public bool $useObjectTags = true;
     /**
      * @var string the Content-Type header for the response
      */
-    private $contentType = 'application/xml';
+    private string $contentType = 'application/xml';
     /**
      * @var string the XML version
      */
-    private $version = '1.0';
-    /**
-     * @var string the XML encoding. If not set, it will use the value of [[Response::charset]].
-     */
-    private $encoding;
+    private string $version = '1.0';
     /**
      * @var string the name of the root element. If set to false, null or is empty then no root tag should be added.
      */
-    private $rootTag = 'response';
+    private string $rootTag = 'response';
     /**
      * @var string the name of the elements that represent the array elements with numeric keys.
      */
-    private $itemTag = 'item';
+    private string $itemTag = 'item';
 
     /**
      * @param ResponseInterface $response
+     * @param $data
      * @return ResponseInterface
      */
     public function format(ResponseInterface $response, $data): ResponseInterface
     {
         // Headers
+        $charset = $response->getCharset() ?? "UTF-8";
         $response = $response->withoutHeader('Content-Type')->withAddedHeader('Content-Type', $this->contentType);
-        $response = $response->withCharset($response->getCharset() ?? "UTF-8");
+        $response = $response->withCharset($charset);
         if ($data !== null) {
             $dom = new DOMDocument($this->version, $charset);
             if (!empty($this->rootTag)) {
@@ -120,13 +113,9 @@ class ResponseXmlFormater implements ResponseFormaterInterface
     }
 
     /**
-     * Returns element name ready to be used in DOMElement if
-     * name is not empty, is not int and is valid.
-     *
-     * Falls back to [[itemTag]] otherwise.
-     *
-     * @param mixed $name
+     * @param $name
      * @return string
+     * @throws DOMException
      */
     protected function getValidXmlElementName($name)
     {
@@ -138,11 +127,9 @@ class ResponseXmlFormater implements ResponseFormaterInterface
     }
 
     /**
-     * Checks if name is valid to be used in XML.
-     *
-     * @param mixed $name
+     * @param $name
      * @return bool
-     * @see http://stackoverflow.com/questions/2519845/how-to-check-if-string-is-a-valid-xml-element-name/2519943#2519943
+     * @throws DOMException
      */
     protected function isValidXmlName($name)
     {
@@ -150,7 +137,7 @@ class ResponseXmlFormater implements ResponseFormaterInterface
             new DOMElement($name);
             return true;
         } catch (DOMException $e) {
-            return false;
+            throw $e;
         }
     }
 

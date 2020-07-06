@@ -3,8 +3,17 @@
   "description": "rabbit httpserver",
   "type": "library",
   "require": {
+    "php": ">=7.4.0",
+    "ext-swoole": ">=4.5.0",
     "rabbit/base": "dev-master",
-    "rabbit/server": "dev-master"
+    "rabbit/web": "dev-master",
+    "rabbit/parser": "dev-master",
+    "rabbit/server": "dev-master",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "swoole/ide-helper": "@dev",
+    "phpunit/phpunit": "*"
   },
   "license": "MIT",
   "authors": [
@@ -13,6 +22,9 @@
       "email": "63851587@qq.com"
     }
   ],
+  "suggest": {
+    "ext-dom": "Support to xml"
+  },
   "autoload": {
     "psr-4": {
       "Rabbit\\HttpServer\\": "src/"

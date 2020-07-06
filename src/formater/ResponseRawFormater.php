@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/15
- * Time: 14:18
- */
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Formater;
 
@@ -12,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class ResponseRawFormater
- * @package rabbit\httpserver\formater
+ * @package Rabbit\HttpServer\Formater
  */
 class ResponseRawFormater implements ResponseFormaterInterface
 {

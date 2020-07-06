@@ -1,13 +1,11 @@
 <?php
-
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer;
 
-use rabbit\contract\DispatcherInterface;
-
 /**
  * Interface RouteInterface
- * @package rabbit\httpserver
+ * @package Rabbit\HttpServer
  */
 interface RouteInterface
 {

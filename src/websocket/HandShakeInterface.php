@@ -1,16 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2019/2/16
- * Time: 14:49
- */
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\WebSocket;
 
 /**
  * Interface HandShakeInterface
- * @package rabbit\httpserver
+ * @package Rabbit\HttpServer\WebSocket
  */
 interface HandShakeInterface
 {

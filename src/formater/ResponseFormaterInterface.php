@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/15
- * Time: 14:56
- */
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Formater;
 

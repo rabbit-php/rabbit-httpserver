@@ -1,9 +1,11 @@
 <?php
-
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\WebSocket;
 
-use rabbit\App;
+use Rabbit\Base\App;
+use Swoole\Websocket\Frame;
+use Throwable;
 
 /**
  * Class CloseHandler
@@ -12,11 +14,10 @@ use rabbit\App;
 class CloseHandler implements CloseHandlerInterface
 {
     /**
-     * @param \Swoole\WebSocket\Server $server
-     * @param \Swoole\Websocket\Frame $frame
-     * @throws \Exception
+     * @param Frame $frame
+     * @throws Throwable
      */
-    public function handle(\Swoole\Websocket\Frame $frame): void
+    public function handle(Frame $frame): void
     {
         App::warning(sprintf("The fd=%d is closed.code=%s reason=%s!", $frame->fd, $frame->code, $frame->reason));
     }

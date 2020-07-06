@@ -1,14 +1,14 @@
 <?php
-
+declare(strict_types=1);
 namespace Rabbit\HttpServer\Parser;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use rabbit\helper\JsonHelper;
+use Rabbit\Base\Helper\JsonHelper;
 
 /**
  * Class RequestJsonParser
- * @package rabbit\httpserver\parser
+ * @package Rabbit\HttpServer\Parser
  */
 class RequestJsonParser implements RequestParserInterface
 {

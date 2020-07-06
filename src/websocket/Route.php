@@ -1,13 +1,12 @@
 <?php
-
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\WebSocket;
 
-use rabbit\contract\DispatcherInterface;
-use rabbit\handler\ErrorHandlerInterface;
-use rabbit\helper\JsonHelper;
-use rabbit\httpserver\RouteInterface;
-use rabbit\server\ServerDispatcher;
+use Rabbit\Base\Helper\JsonHelper;
+use Rabbit\HttpServer\RouteInterface;
+use Rabbit\Server\ServerDispatcher;
+use Rabbit\Web\ErrorHandlerInterface;
 use Swoole\WebSocket\Frame;
 
 /**
@@ -17,19 +16,18 @@ use Swoole\WebSocket\Frame;
 class Route implements RouteInterface
 {
     /** @var array */
-    protected $routes = [];
+    protected array $routes = [];
     /** @var ServerDispatcher */
-    protected $dispatcher;
+    protected ServerDispatcher $dispatcher;
     /** @var CloseHandlerInterface */
-    protected $closeHandler;
+    protected CloseHandlerInterface $closeHandler;
     /** @var \Swoole\Http\Response[] */
-    protected $responses = [];
+    protected array $responses = [];
 
     /**
      * Server constructor.
-     * @param array $setting
-     * @param array $coSetting
-     * @throws \Exception
+     * @param ServerDispatcher $dispatcher
+     * @param array $routes
      */
     public function __construct(ServerDispatcher $dispatcher, array $routes = [])
     {
@@ -39,7 +37,6 @@ class Route implements RouteInterface
 
     /**
      * @param $server
-     * @param DispatcherInterface $dispatcher
      * @return mixed|void
      */
     public function handle($server)
@@ -54,7 +51,7 @@ class Route implements RouteInterface
                     ) {
                         try {
                             if (is_string($handShake) && $handShake = getDI($handShake) && $handShake instanceof HandShakeInterface) {
-                                if (!$handShake->checkHandshake($psrRequest, $psrResponse)) {
+                                if (!$handShake->checkHandshake($request, $response)) {
                                     return;
                                 }
                             }
@@ -64,16 +61,13 @@ class Route implements RouteInterface
                                 /** @var Frame $frame */
                                 $frame = $response->recv();
                                 if ($frame->opcode === 0x08) {
-                                    if (is_string($this->closeHandler)) {
-                                        $this->closeHandler = getDI($this->closeHandler);
-                                    }
                                     unset($this->responses[$response->fd]);
                                     !empty($this->closeHandler) && $this->closeHandler->handle($frame);
                                     return;
                                 }
+                                $data = JsonHelper::decode($frame->data, true);
                                 $psrRequest = new Request($data, $request);
                                 $psrResponse = new Response($response);
-                                $data = JsonHelper::decode($frame->data, true);
                                 $this->dispatcher->dispatch($psrRequest, $psrResponse);
                             }
                         } catch (\Throwable $throw) {
@@ -90,6 +84,7 @@ class Route implements RouteInterface
     }
 
     /**
+     * @param string|null $route
      * @return array
      */
     public function getSwooleResponses(?string $route = null): array

@@ -1,15 +1,15 @@
 <?php
-
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer;
 
 
 use Psr\Http\Message\ServerRequestInterface;
-use rabbit\helper\ArrayHelper;
+use Rabbit\Base\Helper\ArrayHelper;
 
 /**
  * Class IPHelper
- * @package rabbit\web
+ * @package Rabbit\HttpServer
  */
 class IPHelper
 {

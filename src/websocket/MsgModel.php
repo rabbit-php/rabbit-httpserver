@@ -1,11 +1,14 @@
 <?php
-
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\WebSocket;
+use Rabbit\Server\CoServer;
+use Rabbit\Server\ServerHelper;
 
-use rabbit\App;
-use rabbit\httpserver\CoServer;
-
+/**
+ * Class MsgModel
+ * @package Rabbit\HttpServer\WebSocket
+ */
 class MsgModel
 {
     /** @var mixed */
@@ -19,7 +22,7 @@ class MsgModel
     public function handle(): void
     {
         /** @var CoServer $server */
-        $server = App::getServer();
+        $server = ServerHelper::getServer();
         $responses = $server->wsRoute->getSwooleResponses();
         foreach ($responses as $fd => $response) {
             $response->push(is_string($this->params) ? $this->params : json_encode(

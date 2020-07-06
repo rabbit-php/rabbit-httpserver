@@ -1,40 +1,36 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/20
- * Time: 20:06
- */
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\WebSocket;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-use rabbit\helper\ArrayHelper;
-use rabbit\web\MessageTrait;
-use rabbit\web\Uri;
+use Rabbit\Base\Helper\ArrayHelper;
+use Rabbit\Web\MessageTrait;
+use Rabbit\Web\Uri;
 
 /**
  * Class Request
- * @package rabbit\wsserver
+ * @package Rabbit\HttpServer\WebSocket
  */
 class Request implements ServerRequestInterface
 {
     use MessageTrait;
+
     /**
      * @var \Swoole\Http\Request
      */
-    protected $swooleRequest;
+    protected \Swoole\Http\Request $swooleRequest;
 
     /**
      * @var array
      */
-    private $attributes = [];
+    private array $attributes = [];
 
     /**
      * @var array
      */
-    private $cookieParams = [];
+    private array $cookieParams = [];
 
     /**
      * @var null|array|object
@@ -51,17 +47,17 @@ class Request implements ServerRequestInterface
     /**
      * @var array
      */
-    private $queryParams = [];
+    private array $queryParams = [];
 
     /**
      * @var array
      */
-    private $serverParams = [];
+    private array $serverParams = [];
 
     /**
      * @var array
      */
-    private $uploadedFiles = [];
+    private array $uploadedFiles = [];
 
     /**
      * @var string
@@ -69,24 +65,23 @@ class Request implements ServerRequestInterface
     private $method;
 
     /**
-     * @var UriInterface|Uri
+     * @var UriInterface
      */
-    private $uri;
+    private UriInterface $uri;
 
     /**
      * @var string
      */
-    private $requestTarget;
+    private string $requestTarget;
 
     /**
      * Request constructor.
      * @param array $data
-     * @param int $fd
+     * @param \Swoole\Http\Request|null $swooleRequest
      */
     public function __construct(array $data, \Swoole\Http\Request $swooleRequest = null)
     {
-        $query = ArrayHelper::remove($data, 'query', []);
-        $body = ArrayHelper::remove($data, 'body', []);
+        [$query, $body] = ArrayHelper::getValueByArray($data, ['query', 'body'], [[], []]);
         $this->withQueryParams($query)
             ->withParsedBody($body);
         if ($swooleRequest) {

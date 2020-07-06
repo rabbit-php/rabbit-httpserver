@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/11/16
- * Time: 11:03
- */
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Middleware;
 
@@ -12,16 +7,16 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use rabbit\core\Context;
+use Rabbit\Base\Core\Context;
 
 /**
  * Class CorsMiddleware
- * @package rabbit\httpserver\middleware
+ * @package Rabbit\HttpServer\Middleware
  */
 class CorsMiddleware implements MiddlewareInterface
 {
     /** @var array */
-    private $config = [];
+    private array $config = [];
 
     /**
      * CorsMiddleware constructor.

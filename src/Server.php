@@ -1,32 +1,28 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/8
- * Time: 19:44
- */
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer;
 
-use rabbit\core\ObjectFactory;
-use rabbit\core\SingletonTrait;
-use rabbit\handler\ErrorHandlerInterface;
+
+use DI\DependencyException;
+use DI\NotFoundException;
+use Rabbit\Web\ErrorHandlerInterface;
 
 /**
  * Class Server
- * @package rabbit\httpserver
+ * @package Rabbit\HttpServer
  */
 class Server extends \rabbit\server\Server
 {
     /**
      * @var string
      */
-    private $request;
+    private string $request = Request::class;
 
     /**
      * @var string
      */
-    private $response;
+    private string $response = Response::class;
     /** @var callable */
     private $errorResponse;
 
@@ -36,8 +32,8 @@ class Server extends \rabbit\server\Server
      */
     public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response): void
     {
-        $psrRequest = $this->request['class'];
-        $psrResponse = $this->response['class'];
+        $psrRequest = $this->request;
+        $psrResponse = $this->response;
         try {
             $this->dispatcher->dispatch(new $psrRequest($request), new $psrResponse($response));
         } catch (\Throwable $throw) {
@@ -45,7 +41,7 @@ class Server extends \rabbit\server\Server
                 /**
                  * @var ErrorHandlerInterface $errorHandler
                  */
-                $errorHandler = ObjectFactory::get('errorHandler');
+                $errorHandler = getDI('errorHandler');
                 $errorHandler->handle($throw)->send();
             } catch (\Throwable $throwable) {
                 if (is_callable($this->errorResponse)) {
@@ -67,7 +63,9 @@ class Server extends \rabbit\server\Server
     }
 
     /**
-     * @throws \Exception
+     * @param \Swoole\Server|null $server
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function startServer(\Swoole\Server $server = null): void
     {

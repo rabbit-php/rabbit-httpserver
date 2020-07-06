@@ -5,35 +5,38 @@ namespace Rabbit\HttpServer\Formater;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Rabbit\Base\Helper\ArrayHelper;
+use Rabbit\Server\AttributeEnum;
+use Throwable;
 
 /**
  * Class ResponseFormater
- * @package rabbit\httpserver\formater
+ * @package Rabbit\HttpServer\Formater
  */
 class ResponseFormater implements IResponseFormatTool
 {
     /**
      * @var ResponseFormaterInterface[]
      */
-    private $formaters;
+    private array $formaters = [];
 
     /**
      * @var ResponseFormaterInterface
      */
-    private $default = ResponseJsonFormater::class;
+    private ?ResponseFormaterInterface $default;
 
     /**
      * The of header
      *
      * @var string
      */
-    private $headerKey = 'Content-type';
+    private string $headerKey = 'Content-type';
 
     /**
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws Throwable
      */
     public function format(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
@@ -41,15 +44,15 @@ class ResponseFormater implements IResponseFormatTool
         $formaters = $this->mergeFormaters();
         $data = $response->getAttribute(AttributeEnum::RESPONSE_ATTRIBUTE);
         if (!isset($formaters[$contentType])) {
-            if (is_string($this->default)) {
-                $formater = ObjectFactory::get($this->default);
+            if ($this->default === null) {
+                $this->default = $formater = getDI(ResponseJsonFormater::class);
             } else {
                 $formater = $this->default;
             }
         } else {
-            /* @var ResponseFormatInterface $formater */
+            /* @var ResponseFormaterInterface $formater */
             $formaterName = $formaters[$contentType];
-            $formater = ObjectFactory::get($formaterName);
+            $formater = getDI($formaterName);
         }
 
         return $formater->format($response, $data);

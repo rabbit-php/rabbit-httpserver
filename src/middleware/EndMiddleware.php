@@ -1,25 +1,21 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/15
- * Time: 1:53
- */
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Middleware;
 
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use rabbit\core\Context;
-use rabbit\core\ObjectFactory;
-use rabbit\server\AttributeEnum;
-use rabbit\web\NotFoundHttpException;
+use Rabbit\Base\Core\Context;
+use Rabbit\Server\AttributeEnum;
+use Rabbit\Web\NotFoundHttpException;
+use Throwable;
 
 /**
  * Class EndMiddleware
- * @package rabbit\httpserver\middleware
+ * @package Rabbit\HttpServer\Middleware
  */
 class EndMiddleware implements MiddlewareInterface
 {
@@ -27,7 +23,8 @@ class EndMiddleware implements MiddlewareInterface
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws Exception
+     * @throws Throwable
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -45,7 +42,7 @@ class EndMiddleware implements MiddlewareInterface
                 $controller .= '\\' . $value;
             }
         }
-        $controller = ObjectFactory::get($controller);
+        $controller = getDI($controller);
         if ($controller === null) {
             throw new NotFoundHttpException("can not find the route:$route");
         }

@@ -1,14 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Parser;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use rabbit\helper\XmlHelper;
+use Rabbit\Base\Helper\XmlHelper;
+
 
 /**
  * Class RequestXmlParser
- * @package rabbit\httpserver\parser
+ * @package Rabbit\HttpServer\Parser
  */
 class RequestXmlParser implements RequestParserInterface
 {

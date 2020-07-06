@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/15
- * Time: 16:27
- */
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Middleware;
 
@@ -12,9 +7,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use rabbit\core\ObjectFactory;
-use rabbit\httpserver\parser\RequestParser;
-use rabbit\httpserver\parser\RequestParserInterface;
+use Rabbit\HttpServer\Parser\RequestParser;
+use Rabbit\HttpServer\Parser\RequestParserInterface;
+use Throwable;
 
 /**
  * Class ParserMiddleware
@@ -23,20 +18,20 @@ use rabbit\httpserver\parser\RequestParserInterface;
 class ParserMiddleware implements MiddlewareInterface
 {
     /**
-     * @var RequestParserInterface|string
+     * @var RequestParserInterface
      */
-    private $parser = RequestParser::class;
+    private RequestParserInterface $parser;
 
     /**
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws Throwable
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (is_string($this->parser)) {
-            $this->parser = ObjectFactory::get($this->parser);
+        if ($this->parser===null) {
+            $this->parser = getDI(RequestParser::class);
         }
         $request = $this->parser->parse($request);
         return $handler->handle($request);

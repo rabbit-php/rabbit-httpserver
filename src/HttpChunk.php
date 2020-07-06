@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer;
 
@@ -10,11 +10,11 @@ namespace Rabbit\HttpServer;
 class HttpChunk
 {
     /** @var Response */
-    private $response;
+    private Response $response;
     /** @var string */
-    private $preStr = '';
+    private string $preStr = '';
     /** @var string */
-    private $endStr = '';
+    private string $endStr = '';
 
     /**
      * HttpChunk constructor.

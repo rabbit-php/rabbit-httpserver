@@ -1,14 +1,14 @@
 <?php
-
+declare(strict_types=1);
 namespace Rabbit\HttpServer\Parser;
 
 use Psr\Http\Message\ServerRequestInterface;
-use rabbit\core\ObjectFactory;
-use rabbit\helper\ArrayHelper;
+use Rabbit\Base\Helper\ArrayHelper;
+use Throwable;
 
 /**
  * Class RequestParser
- * @package rabbit\httpserver\parser
+ * @package Rabbit\HttpServer\Parser
  */
 class RequestParser implements RequestParserInterface
 {
@@ -17,7 +17,7 @@ class RequestParser implements RequestParserInterface
      *
      * @var array
      */
-    private $parsers = [
+    private array $parsers = [
 
     ];
 
@@ -26,12 +26,12 @@ class RequestParser implements RequestParserInterface
      *
      * @var string
      */
-    private $headerKey = 'Content-type';
+    private string $headerKey = 'Content-type';
 
     /**
      * @param ServerRequestInterface $request
      * @return ServerRequestInterface
-     * @throws \Exception
+     * @throws Throwable
      */
     public function parse(ServerRequestInterface $request): ServerRequestInterface
     {
@@ -44,7 +44,7 @@ class RequestParser implements RequestParserInterface
 
         /* @var RequestParserInterface $parser */
         $parserName = $parsers[$contentType];
-        $parser = ObjectFactory::get($parserName);
+        $parser = getDI($parserName);
 
         return $parser->parse($request);
     }
