@@ -6,7 +6,7 @@
  * Time: 19:44
  */
 
-namespace rabbit\httpserver;
+namespace Rabbit\HttpServer;
 
 use rabbit\core\ObjectFactory;
 use rabbit\core\SingletonTrait;

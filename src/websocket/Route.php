@@ -1,7 +1,7 @@
 <?php
 
 
-namespace rabbit\httpserver\websocket;
+namespace Rabbit\HttpServer\WebSocket;
 
 use rabbit\contract\DispatcherInterface;
 use rabbit\handler\ErrorHandlerInterface;

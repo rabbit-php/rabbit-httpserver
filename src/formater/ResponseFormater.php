@@ -1,18 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/15
- * Time: 14:01
- */
+declare(strict_types=1);
 
-namespace rabbit\httpserver\formater;
+namespace Rabbit\HttpServer\Formater;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use rabbit\core\ObjectFactory;
-use rabbit\helper\ArrayHelper;
-use rabbit\server\AttributeEnum;
 
 /**
  * Class ResponseFormater

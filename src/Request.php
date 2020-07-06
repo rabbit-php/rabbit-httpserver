@@ -6,7 +6,7 @@
  * Time: 13:34
  */
 
-namespace rabbit\httpserver;
+namespace Rabbit\HttpServer;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;

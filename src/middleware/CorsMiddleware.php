@@ -6,7 +6,7 @@
  * Time: 11:03
  */
 
-namespace rabbit\httpserver\middleware;
+namespace Rabbit\HttpServer\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

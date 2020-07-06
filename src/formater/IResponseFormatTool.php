@@ -1,19 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/15
- * Time: 13:51
- */
+declare(strict_types=1);
 
-namespace rabbit\httpserver\formater;
+namespace Rabbit\HttpServer\Formater;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Interface IResponseFormatTool
- * @package rabbit\httpserver\formater
+ * @package Rabbit\HttpServer\Formater
  */
 interface IResponseFormatTool
 {

@@ -6,7 +6,7 @@
  * Time: 13:52
  */
 
-namespace rabbit\httpserver\formater;
+namespace Rabbit\HttpServer\Formater;
 
 use Psr\Http\Message\ResponseInterface;
 use rabbit\helper\ArrayHelper;

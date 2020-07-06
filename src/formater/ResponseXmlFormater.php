@@ -6,7 +6,7 @@
  * Time: 14:06
  */
 
-namespace rabbit\httpserver\formater;
+namespace Rabbit\HttpServer\Formater;
 
 use DOMDocument;
 use DOMElement;

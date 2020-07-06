@@ -1,7 +1,7 @@
 <?php
 
 
-namespace rabbit\httpserver;
+namespace Rabbit\HttpServer;
 
 
 use Psr\Http\Message\ServerRequestInterface;

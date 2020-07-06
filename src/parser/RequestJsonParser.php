@@ -1,6 +1,6 @@
 <?php
 
-namespace rabbit\httpserver\parser;
+namespace Rabbit\HttpServer\Parser;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;

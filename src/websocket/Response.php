@@ -6,7 +6,7 @@
  * Time: 22:48
  */
 
-namespace rabbit\httpserver\websocket;
+namespace Rabbit\HttpServer\WebSocket;
 
 use Psr\Http\Message\ResponseInterface;
 use rabbit\exception\NotSupportedException;

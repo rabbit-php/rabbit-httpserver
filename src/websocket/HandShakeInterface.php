@@ -6,7 +6,7 @@
  * Time: 14:49
  */
 
-namespace rabbit\httpserver\websocket;
+namespace Rabbit\HttpServer\WebSocket;
 
 /**
  * Interface HandShakeInterface

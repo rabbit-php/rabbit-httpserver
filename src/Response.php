@@ -6,7 +6,7 @@
  * Time: 16:53
  */
 
-namespace rabbit\httpserver;
+namespace Rabbit\HttpServer;
 
 use Psr\Http\Message\ResponseInterface;
 use rabbit\helper\FileHelper;

@@ -6,7 +6,7 @@
  * Time: 20:06
  */
 
-namespace rabbit\httpserver\websocket;
+namespace Rabbit\HttpServer\WebSocket;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
