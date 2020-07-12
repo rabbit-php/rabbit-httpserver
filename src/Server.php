@@ -23,8 +23,6 @@ class Server extends \Rabbit\Server\Server
      * @var string
      */
     private string $response = Response::class;
-    /** @var callable */
-    protected $errorResponse;
 
     /**
      * @param \Swoole\Http\Request $request
@@ -44,12 +42,8 @@ class Server extends \Rabbit\Server\Server
                 $errorHandler = getDI('errorHandler');
                 $errorHandler->handle($throw)->send();
             } catch (\Throwable $throwable) {
-                if (is_callable($this->errorResponse)) {
-                    call_user_func($this->errorResponse, $response, $throwable);
-                } else {
-                    $response->status(500);
-                    $response->end("An internal server error occurred.");
-                }
+                $response->status(500);
+                $response->end("An internal server error occurred.");
             }
         }
     }
