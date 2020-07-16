@@ -5,7 +5,6 @@ namespace Rabbit\HttpServer;
 
 use Rabbit\Server\ServerDispatcher;
 use Rabbit\Web\DispatcherInterface;
-use Rabbit\Web\ErrorHandlerInterface;
 
 /**
  * Class Route
@@ -39,11 +38,13 @@ class Route implements RouteInterface
                 $psrResponse = new Response($response);
                 $this->dispatcher->dispatch($psrRequest, $psrResponse);
             } catch (\Throwable $throw) {
-                /**
-                 * @var ErrorHandlerInterface $errorHandler
-                 */
-                $errorHandler = getDI('errorHandler');
-                $errorHandler->handle($throw)->send();
+                $errorResponse = getDI('errorResponse', false);
+                if ($errorResponse === null) {
+                    $response->status(500);
+                    $response->end("An internal server error occurred.");
+                } else {
+                    $errorResponse->handle($response, $throwable);
+                }
             }
         });
     }

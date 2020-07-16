@@ -6,7 +6,6 @@ namespace Rabbit\HttpServer;
 
 use DI\DependencyException;
 use DI\NotFoundException;
-use Rabbit\Web\ErrorHandlerInterface;
 
 /**
  * Class Server
@@ -35,15 +34,12 @@ class Server extends \Rabbit\Server\Server
         try {
             $this->dispatcher->dispatch(new $psrRequest($request), new $psrResponse($response));
         } catch (\Throwable $throw) {
-            try {
-                /**
-                 * @var ErrorHandlerInterface $errorHandler
-                 */
-                $errorHandler = getDI('errorHandler');
-                $errorHandler->handle($throw)->send();
-            } catch (\Throwable $throwable) {
+            $errorResponse = getDI('errorResponse', false);
+            if ($errorResponse === null) {
                 $response->status(500);
                 $response->end("An internal server error occurred.");
+            } else {
+                $errorResponse->handle($response, $throwable);
             }
         }
     }
