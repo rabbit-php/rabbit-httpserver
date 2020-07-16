@@ -38,13 +38,6 @@ class Request implements ServerRequestInterface
     private $parsedBody;
 
     /**
-     * the body of parser
-     *
-     * @var mixed
-     */
-    private $bodyParams;
-
-    /**
      * @var array
      */
     private array $queryParams = [];
@@ -287,25 +280,6 @@ class Request implements ServerRequestInterface
     public function getParsedBody()
     {
         return $this->parsedBody;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBodyParams()
-    {
-        return $this->bodyParams;
-    }
-
-    /**
-     * @param $data
-     * @return Request
-     */
-    public function withBodyParams($data): self
-    {
-        $clone = $this;
-        $clone->bodyParams = $data;
-        return $clone;
     }
 
     /**
