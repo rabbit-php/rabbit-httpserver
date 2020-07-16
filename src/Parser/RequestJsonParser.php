@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace Rabbit\HttpServer\Parser;
 
 use Psr\Http\Message\RequestInterface;
@@ -26,7 +27,7 @@ class RequestJsonParser implements RequestParserInterface
             } catch (\Exception $e) {
                 $bodyParams = $bodyContent;
             }
-            $bodyParams = array_merge($request->getParsedBody(), is_array($bodyParams) ? $bodyParams : []);
+            $bodyParams = array_merge($request->getParsedBody(), $bodyParams);
             return $request->withParsedBody($bodyParams);
         }
 
