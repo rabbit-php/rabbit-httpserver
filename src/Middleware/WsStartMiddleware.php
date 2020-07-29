@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/15
- * Time: 14:59
- */
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Middleware;
 
@@ -12,13 +7,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use rabbit\helper\ArrayHelper;
-use rabbit\helper\JsonHelper;
-use rabbit\server\AttributeEnum;
+use Rabbit\Base\Helper\ArrayHelper;
+use Rabbit\Base\Helper\JsonHelper;
+use Rabbit\Web\AttributeEnum;
 
 /**
- * Class StartMiddleware
- * @package rabbit\httpserver\middleware
+ * Class WsStartMiddleware
+ * @package Rabbit\HttpServer\Middleware
  */
 class WsStartMiddleware implements MiddlewareInterface
 {

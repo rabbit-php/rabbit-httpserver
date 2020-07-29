@@ -18,7 +18,7 @@ trait AcceptTrait
     /**
      * @var IResponseFormatTool
      */
-    protected IResponseFormatTool $formater;
+    protected ?IResponseFormatTool $formater = null;
 
     /**
      * @param ServerRequestInterface $request

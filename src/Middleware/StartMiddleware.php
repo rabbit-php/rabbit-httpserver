@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/15
- * Time: 14:59
- */
+declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Middleware;
 
@@ -15,7 +10,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Class StartMiddleware
- * @package rabbit\httpserver\middleware
+ * @package Rabbit\HttpServer\Middleware
  */
 class StartMiddleware implements MiddlewareInterface
 {

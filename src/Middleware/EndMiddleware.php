@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Rabbit\Base\Core\Context;
-use Rabbit\Server\AttributeEnum;
+use Rabbit\Web\AttributeEnum;
 use Rabbit\Web\NotFoundHttpException;
 use Throwable;
 

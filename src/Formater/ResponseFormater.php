@@ -6,7 +6,7 @@ namespace Rabbit\HttpServer\Formater;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Rabbit\Base\Helper\ArrayHelper;
-use Rabbit\Server\AttributeEnum;
+use Rabbit\Web\AttributeEnum;
 use Throwable;
 
 /**

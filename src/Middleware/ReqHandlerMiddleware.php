@@ -8,16 +8,20 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Rabbit\Base\Core\Context;
-use Rabbit\Server\AttributeEnum;
-use Rabbit\Web\NotFoundHttpException;
+use Rabbit\HttpServer\Exceptions\NotFoundHttpException;
+use Rabbit\Web\AttributeEnum;
 use Throwable;
 
 /**
  * Class ReqHandlerMiddleware
- * @package rabbit\httpserver\middleware
+ * @package Rabbit\HttpServer\Middleware
  */
 class ReqHandlerMiddleware implements MiddlewareInterface
 {
+    protected string $prefix = '';
+    protected string $handlers = 'Handlers';
+    protected bool $isUper = true;
+
     /**
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
@@ -31,7 +35,10 @@ class ReqHandlerMiddleware implements MiddlewareInterface
             throw new NotFoundHttpException("the route type error:" . $request->getUri()->getPath());
         }
         list($module, $action) = $route;
-        $class = 'apis\\' . $module . "\\handlers\\" . $action;
+        $class = ($this->prefix ? $this->prefix . '\\' : '')
+            . ($this->isUper ? ucfirst($module) : $module) . '\\'
+            . ($this->handlers ? $this->handlers . '\\' : '')
+            . ($this->isUper ? ucfirst($action) : $action);
 
         $class = getDI($class, false);
         if ($class === null) {
@@ -40,7 +47,7 @@ class ReqHandlerMiddleware implements MiddlewareInterface
         /**
          * @var ResponseInterface $response
          */
-        $response = $class($request->getQueryParams(), $request);
+        $response = $class($request->getParsedBody() + $request->getQueryParams(), $request);
         if (!$response instanceof ResponseInterface) {
             /**
              * @var ResponseInterface $newResponse
