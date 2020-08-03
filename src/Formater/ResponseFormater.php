@@ -23,7 +23,7 @@ class ResponseFormater implements IResponseFormatTool
     /**
      * @var ResponseFormaterInterface
      */
-    private ?ResponseFormaterInterface $default;
+    private ?ResponseFormaterInterface $default = null;
 
     /**
      * The of header
