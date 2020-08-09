@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Rabbit\HttpServer;
 
 
-use Exception;
 use Rabbit\Base\Exception\InvalidArgumentException;
 
 /**

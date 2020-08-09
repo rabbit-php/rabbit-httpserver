@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Rabbit\Base\Core\Context;
+use Rabbit\Web\ResponseContext;
 
 /**
  * Class CorsMiddleware
@@ -29,8 +29,7 @@ class CorsMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        /** @var ResponseInterface $response */
-        $response = Context::get('response');
+        $response = ResponseContext::get();
         foreach ($this->config as $name => $value) {
             $response->withHeader($name, $value);
         }

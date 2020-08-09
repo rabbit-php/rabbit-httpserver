@@ -6,6 +6,7 @@ namespace Rabbit\HttpServer;
 
 use DI\DependencyException;
 use DI\NotFoundException;
+use Throwable;
 
 /**
  * Class Server
@@ -26,6 +27,7 @@ class Server extends \Rabbit\Server\Server
     /**
      * @param \Swoole\Http\Request $request
      * @param \Swoole\Http\Response $response
+     * @throws Throwable
      */
     public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response): void
     {
@@ -33,13 +35,13 @@ class Server extends \Rabbit\Server\Server
         $psrResponse = $this->response;
         try {
             $this->dispatcher->dispatch(new $psrRequest($request), new $psrResponse($response));
-        } catch (\Throwable $throw) {
+        } catch (Throwable $throw) {
             $errorResponse = getDI('errorResponse', false);
             if ($errorResponse === null) {
                 $response->status(500);
                 $response->end("An internal server error occurred.");
             } else {
-                $errorResponse->handle($response, $throwable);
+                $errorResponse->handle($response, $throw);
             }
         }
     }

@@ -8,9 +8,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Rabbit\Base\Core\Context;
+use Rabbit\HttpServer\Exceptions\NotFoundHttpException;
 use Rabbit\Web\AttributeEnum;
-use Rabbit\Web\NotFoundHttpException;
+use Rabbit\Web\ResponseContext;
 use Throwable;
 
 /**
@@ -51,10 +51,7 @@ class EndMiddleware implements MiddlewareInterface
          */
         $response = call_user_func_array([$controller, $action], $request->getQueryParams());
         if (!$response instanceof ResponseInterface) {
-            /**
-             * @var ResponseInterface $newResponse
-             */
-            $newResponse = Context::get('response');
+            $newResponse = ResponseContext::get();
             $newResponse->withAttribute(AttributeEnum::RESPONSE_ATTRIBUTE, $response);
         }
 

@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Rabbit\Base\Core\Context;
+use Rabbit\Web\ResponseContext;
 
 /**
  * Class HealthCheckMiddleware
@@ -15,7 +15,6 @@ use Rabbit\Base\Core\Context;
  */
 class HealthCheckMiddleware implements MiddlewareInterface
 {
-    /** @var string */
     protected ?string $health;
 
     /**
@@ -36,7 +35,7 @@ class HealthCheckMiddleware implements MiddlewareInterface
     {
         $url = $request->getUri()->getPath();
         if ($url === $this->health) {
-            return Context::get('response');
+            return ResponseContext::get();
         }
         return $handler->handle($request);
     }
