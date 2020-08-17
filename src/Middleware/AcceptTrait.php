@@ -15,9 +15,6 @@ use Throwable;
  */
 trait AcceptTrait
 {
-    /**
-     * @var IResponseFormatTool
-     */
     protected ?IResponseFormatTool $formater = null;
 
     /**

@@ -6,23 +6,48 @@ namespace Rabbit\HttpServer;
 
 use DI\DependencyException;
 use DI\NotFoundException;
+use Rabbit\Base\Contract\InitInterface;
+use Rabbit\Base\Core\Exception;
+use Rabbit\Base\Helper\FileHelper;
+use Rabbit\HttpServer\Middleware\ReqHandlerMiddleware;
+use Rabbit\HttpServer\Middleware\StartMiddleware;
+use Rabbit\Server\ServerDispatcher;
+use Rabbit\Web\RequestHandler;
+use ReflectionException;
 use Throwable;
 
 /**
  * Class Server
  * @package Rabbit\HttpServer
  */
-class Server extends \Rabbit\Server\Server
+class Server extends \Rabbit\Server\Server implements InitInterface
 {
-    /**
-     * @var string
-     */
     private string $request = Request::class;
+    private string $response = Response::class;
+    private array $middlewares = [];
 
     /**
-     * @var string
+     * @throws DependencyException
+     * @throws Exception
+     * @throws NotFoundException
+     * @throws ReflectionException
      */
-    private string $response = Response::class;
+    public function init(): void
+    {
+        if (!$this->dispatcher) {
+            $this->dispatcher = create(ServerDispatcher::class, [
+                'requestHandler' => create(RequestHandler::class, [
+                    'middlewares' => $this->middlewares ? $this->middlewares : [
+                        create(StartMiddleware::class),
+                        create(ReqHandlerMiddleware::class)
+                    ]
+                ])
+            ]);
+        }
+        if (!is_dir(dirname($this->setting['log_file']))) {
+            FileHelper::createDirectory(dirname($this->setting['log_file']));
+        }
+    }
 
     /**
      * @param \Swoole\Http\Request $request

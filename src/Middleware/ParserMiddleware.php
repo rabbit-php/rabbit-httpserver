@@ -13,7 +13,7 @@ use Throwable;
 
 /**
  * Class ParserMiddleware
- * @package rabbit\httpserver\middleware
+ * @package Rabbit\HttpServer\Middleware
  */
 class ParserMiddleware implements MiddlewareInterface
 {
@@ -30,7 +30,7 @@ class ParserMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if ($this->parser===null) {
+        if ($this->parser === null) {
             $this->parser = getDI(RequestParser::class);
         }
         $request = $this->parser->parse($request);

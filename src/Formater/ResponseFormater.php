@@ -15,14 +15,7 @@ use Throwable;
  */
 class ResponseFormater implements IResponseFormatTool
 {
-    /**
-     * @var ResponseFormaterInterface[]
-     */
     private array $formaters = [];
-
-    /**
-     * @var ResponseFormaterInterface
-     */
     private ?ResponseFormaterInterface $default = null;
 
     /**
