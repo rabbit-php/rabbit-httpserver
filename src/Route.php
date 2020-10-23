@@ -38,11 +38,10 @@ class Route implements RouteInterface
         $server->handle('/', function (\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
             try {
                 $psrRequest = new Request($request);
-                $psrResponse = new Response($response);
+                $psrResponse = new Response();
                 RequestContext::set($psrRequest);
                 ResponseContext::set($psrResponse);
-                $this->dispatcher->dispatch($psrRequest, $psrResponse);
-                $psrResponse->send();
+                $this->dispatcher->dispatch($psrRequest)->setSwooleResponse($response)->send();
             } catch (\Throwable $throw) {
                 $errorResponse = getDI('errorResponse', false);
                 if ($errorResponse === null) {

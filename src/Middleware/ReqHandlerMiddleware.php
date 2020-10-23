@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Rabbit\HttpServer\Middleware;
 
 use Throwable;
-use Swow\Http\Buffer;
-use Rabbit\Web\SwooleStream;
-use Rabbit\Web\AttributeEnum;
-use Swow\Http\Server\Response;
+use Rabbit\Web\ResponseContext;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -51,8 +48,8 @@ class ReqHandlerMiddleware implements MiddlewareInterface
 
         $response = $class($request->getParsedBody() + $request->getQueryParams(), $request);
         if (!$response instanceof ResponseInterface) {
-            $newResponse = new Response();
-            $this->handleAccept($request, $newResponse, $response);
+            $newResponse = ResponseContext::get();
+            return $this->handleAccept($request, $newResponse, $response);
         }
 
         return $handler->handle($request);

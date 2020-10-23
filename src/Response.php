@@ -106,21 +106,7 @@ class Response implements ResponseInterface
     /**
      * @var array
      */
-    private array $attributes = [];
-
-    /**
-     * @var array
-     */
     private array $cookies = [];
-
-    /**
-     * Response constructor.
-     * @param \Swoole\Http\Response $response
-     */
-    public function __construct(\Swoole\Http\Response $response)
-    {
-        $this->swooleResponse = $response;
-    }
 
     /**
      * @param int $code
@@ -231,36 +217,6 @@ class Response implements ResponseInterface
     }
 
     /**
-     * @return array
-     */
-    public function getAttributes(): array
-    {
-        return $this->attributes;
-    }
-
-    /**
-     * @param $name
-     * @param null $default
-     * @return mixed|null
-     */
-    public function getAttribute($name, $default = null)
-    {
-        return array_key_exists($name, $this->attributes) ? $this->attributes[$name] : $default;
-    }
-
-    /**
-     * @param $name
-     * @param $value
-     * @return Response
-     */
-    public function withAttribute(string $name, $value): Response
-    {
-        $clone = &$this;
-        $clone->attributes[$name] = $value;
-        return $clone;
-    }
-
-    /**
      * @param string $filePath
      * @param string|null $attachmentName
      * @param array $options
@@ -351,5 +307,6 @@ class Response implements ResponseInterface
     public function setSwooleResponse(\Swoole\Http\Response $response): self
     {
         $this->swooleResponse = $response;
+        return $this;
     }
 }

@@ -6,29 +6,30 @@ namespace Rabbit\HttpServer;
 
 use Exception;
 use Swow\Coroutine;
-use Rabbit\Base\App;
 use const Swow\Errno\EMFILE;
 use const Swow\Errno\ENFILE;
-
 use const Swow\Errno\ENOMEM;
-
-use Rabbit\Web\RequestHandler;
+use Rabbit\Web\RequestContext;
+use Swow\Http\Server\Response;
+use Rabbit\Web\ResponseContext;
+use Rabbit\Web\DispatcherInterface;
 use Swow\Http\Server as HttpServer;
 use Swow\Http\Exception as HttpException;
 use Swow\Socket\Exception as SocketException;
 use Swow\Coroutine\Exception as CoroutineException;
-use Rabbit\HttpServer\Middleware\ReqHandlerMiddleware;
 
 class SwowServer
 {
     protected string $host = '0.0.0.0';
     protected int $port = 80;
     protected array $middlewares = [];
+    protected DispatcherInterface $dispatcher;
 
-    public function __construct(string $host = '0.0.0.0', int $port = 80)
+    public function __construct(DispatcherInterface $dispatcher, string $host = '0.0.0.0', int $port = 80)
     {
         $this->host = $host;
         $this->port = $port;
+        $this->dispatcher = $dispatcher;
     }
 
     public function run(): void
@@ -44,12 +45,10 @@ class SwowServer
                             $request = null;
                             try {
                                 $request = $session->recvHttpRequest();
-                                $response = create(RequestHandler::class, [
-                                    'middlewares' => $this->middlewares ? $this->middlewares : [
-                                        create(ReqHandlerMiddleware::class)
-                                    ]
-                                ])->handle($request);
-                                $session->sendHttpResponse($response);
+                                $response = new Response();
+                                RequestContext::set($request);
+                                ResponseContext::set($response);
+                                $session->sendHttpResponse($this->dispatcher->dispatch($request));
                             } catch (HttpException $exception) {
                                 $session->error($exception->getCode(), $exception->getMessage());
                             }

@@ -24,8 +24,6 @@ use Rabbit\HttpServer\Middleware\ReqHandlerMiddleware;
  */
 class Server extends \Rabbit\Server\Server implements InitInterface
 {
-    private string $request = Request::class;
-    private string $response = Response::class;
     private array $middlewares = [];
 
     /**
@@ -57,15 +55,12 @@ class Server extends \Rabbit\Server\Server implements InitInterface
      */
     public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response): void
     {
-        $psrRequest = $this->request;
-        $psrResponse = $this->response;
         try {
-            $psrRequest = new $psrRequest($request);
-            $psrResponse = new $psrResponse($response);
+            $psrRequest = new Request($request);
+            $psrResponse = new Response();
             RequestContext::set($psrRequest);
             ResponseContext::set($psrResponse);
-            $this->dispatcher->dispatch($psrRequest, $psrResponse);
-            $psrResponse->send();
+            $this->dispatcher->dispatch($psrRequest)->setSwooleResponse($response)->send();
         } catch (Throwable $throw) {
             $errorResponse = getDI('errorResponse', false);
             if ($errorResponse === null) {

@@ -28,9 +28,9 @@ class ResponseJsonFormater implements ResponseFormaterInterface
         $data = [
             'code' => 0,
             'msg' => 'success',
-            'result' => ArrayHelper::toArray($data)
+            'result' => $data
         ];
-        $content = JsonHelper::encode($data, JSON_UNESCAPED_UNICODE);
+        $content = JsonHelper::encode(ArrayHelper::toArray($data), JSON_UNESCAPED_UNICODE);
         $body = $response->getBody();
         $body->seek(0);
         $body->write($content);

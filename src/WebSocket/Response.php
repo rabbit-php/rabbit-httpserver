@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer\WebSocket;
@@ -16,12 +17,6 @@ use Rabbit\Base\Exception\NotSupportedException;
 class Response implements ResponseInterface
 {
     use MessageTrait;
-
-    const FD_LIST = 'fdList';
-    /**
-     * @var array
-     */
-    private array $attributes = [];
     /**
      * @var int
      */
@@ -33,13 +28,12 @@ class Response implements ResponseInterface
     /** @var \Swoole\Http\Response */
     protected \Swoole\Http\Response $swooleResponse;
 
-    /**
-     * Response constructor.
-     * @param \Swoole\Http\Response $response
-     */
-    public function __construct(\Swoole\Http\Response $response)
+    protected array $fdList = [];
+
+    public function withFdList(array $list): self
     {
-        $this->swooleResponse = $response;
+        $this->fdList = $list;
+        return $this;
     }
 
     /**
@@ -71,41 +65,11 @@ class Response implements ResponseInterface
     }
 
     /**
-     * @return array
-     */
-    public function getAttributes(): array
-    {
-        return $this->attributes;
-    }
-
-    /**
-     * @param $name
-     * @param null $default
-     * @return mixed|null
-     */
-    public function getAttribute($name, $default = null)
-    {
-        return array_key_exists($name, $this->attributes) ? $this->attributes[$name] : $default;
-    }
-
-    /**
-     * @param $name
-     * @param $value
-     * @return Response
-     */
-    public function withAttribute($name, $value): Response
-    {
-        $this->attributes[$name] = $value;
-        return $this;
-    }
-
-    /**
      *
      */
     public function send(): void
     {
-        $fdList = ArrayHelper::getValue($this->attributes, static::FD_LIST, []);
-        foreach ($fdList as $fd => $message) {
+        foreach ($this->fdList as $fd => $message) {
             rgo(function () use ($fd, $message) {
                 (new \Swoole\Http\Response($fd))->push($message);
             });
@@ -123,5 +87,23 @@ class Response implements ResponseInterface
     public function push(int $fd, string $msg): void
     {
         (new \Swoole\Http\Response($fd))->push($msg);
+    }
+
+    /**
+     * @return \Swoole\Http\Response
+     */
+    public function getSwooleResponse(): \Swoole\Http\Response
+    {
+        return $this->swooleResponse;
+    }
+
+    /**
+     * @param \Swoole\Http\Response $response
+     * @return Response
+     */
+    public function setSwooleResponse(\Swoole\Http\Response $response): self
+    {
+        $this->swooleResponse = $response;
+        return $this;
     }
 }

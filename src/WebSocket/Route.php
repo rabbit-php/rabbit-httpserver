@@ -70,11 +70,10 @@ class Route implements RouteInterface
                                 }
                                 $data = JsonHelper::decode($frame->data, true);
                                 $psrRequest = new Request($data, $request);
-                                $psrResponse = new Response($response);
+                                $psrResponse = new Response();
                                 RequestContext::set($psrRequest);
                                 ResponseContext::set($psrResponse);
-                                $this->dispatcher->dispatch($psrRequest, $psrResponse);
-                                $psrResponse->send();
+                                $this->dispatcher->dispatch($psrRequest)->setSwooleResponse($response)->send();
                             }
                         } catch (\Throwable $throw) {
                             $errorResponse = getDI('errorResponse', false);
