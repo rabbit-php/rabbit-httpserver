@@ -1,8 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer;
 
+use Rabbit\Web\RequestContext;
+use Rabbit\Web\ResponseContext;
 use Rabbit\Server\ServerDispatcher;
 use Rabbit\Web\DispatcherInterface;
 
@@ -36,14 +39,17 @@ class Route implements RouteInterface
             try {
                 $psrRequest = new Request($request);
                 $psrResponse = new Response($response);
+                RequestContext::set($psrRequest);
+                ResponseContext::set($psrResponse);
                 $this->dispatcher->dispatch($psrRequest, $psrResponse);
+                $psrResponse->send();
             } catch (\Throwable $throw) {
                 $errorResponse = getDI('errorResponse', false);
                 if ($errorResponse === null) {
                     $response->status(500);
                     $response->end("An internal server error occurred.");
                 } else {
-                    $errorResponse->handle($response, $throwable);
+                    $response->end($errorResponse->handle($throw, $response));
                 }
             }
         });

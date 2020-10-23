@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Rabbit\HttpServer;
 
-use Psr\Http\Message\ResponseInterface;
-use Rabbit\Base\Helper\FileHelper;
 use rabbit\web\Cookie;
 use rabbit\web\MessageTrait;
 use rabbit\web\SwooleStream;
+use Rabbit\Base\Helper\FileHelper;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Response
@@ -220,21 +220,6 @@ class Response implements ResponseInterface
     }
 
     /**
-     * @param $content
-     * @return Response
-     */
-    public function withContent($content): Response
-    {
-        if ($this->stream) {
-            return $this;
-        }
-
-        $clone = &$this;
-        $clone->stream = new SwooleStream($content);
-        return $clone;
-    }
-
-    /**
      * @param Cookie $cookie
      * @return Response
      */
@@ -243,24 +228,6 @@ class Response implements ResponseInterface
         $clone = &$this;
         $clone->cookies[$cookie->getDomain()][$cookie->getPath()][$cookie->getName()] = $cookie;
         return $clone;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCharset(): string
-    {
-        return $this->charset;
-    }
-
-    /**
-     * @param string $charset
-     * @return Response
-     */
-    public function withCharset(string $charset): Response
-    {
-        $this->charset = $charset;
-        return $this;
     }
 
     /**

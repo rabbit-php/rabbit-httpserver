@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Formater;
 
-use DOMDocument;
-use DOMElement;
-use DOMException;
 use DOMText;
-use Psr\Http\Message\ResponseInterface;
+use DOMElement;
+use DOMDocument;
+use DOMException;
 use Rabbit\Base\Contract\ArrayAble;
 use Rabbit\Base\Helper\StringHelper;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class ResponseXmlFormater
@@ -51,11 +51,9 @@ class ResponseXmlFormater implements ResponseFormaterInterface
     public function format(ResponseInterface $response, $data): ResponseInterface
     {
         // Headers
-        $charset = $response->getCharset() ?? "UTF-8";
         $response = $response->withoutHeader('Content-Type')->withAddedHeader('Content-Type', $this->contentType);
-        $response = $response->withCharset($charset);
         if ($data !== null) {
-            $dom = new DOMDocument($this->version, $charset);
+            $dom = new DOMDocument($this->version, 'utf-8');
             if (!empty($this->rootTag)) {
                 $root = new DOMElement($this->rootTag);
                 $dom->appendChild($root);
@@ -63,8 +61,9 @@ class ResponseXmlFormater implements ResponseFormaterInterface
             } else {
                 $this->buildXml($dom, $data);
             }
-            $content = $dom->saveXML();
-            $response->withContent($content);
+            $body = $response->getBody();
+            $body->seek(0);
+            $body->write($dom->saveXML());
         }
         return $response;
     }

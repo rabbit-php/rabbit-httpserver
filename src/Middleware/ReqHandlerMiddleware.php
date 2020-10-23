@@ -1,16 +1,19 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Middleware;
 
+use Throwable;
+use Swow\Http\Buffer;
+use Rabbit\Web\SwooleStream;
+use Rabbit\Web\AttributeEnum;
+use Swow\Http\Server\Response;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Rabbit\HttpServer\Exceptions\NotFoundHttpException;
-use Rabbit\Web\AttributeEnum;
-use Rabbit\Web\ResponseContext;
-use Throwable;
 
 /**
  * Class ReqHandlerMiddleware
@@ -18,7 +21,8 @@ use Throwable;
  */
 class ReqHandlerMiddleware implements MiddlewareInterface
 {
-    protected string $prefix = '';
+    use AcceptTrait;
+    protected string $prefix = 'Apis';
     protected string $handlers = 'Handlers';
     protected bool $isUper = true;
 
@@ -44,13 +48,11 @@ class ReqHandlerMiddleware implements MiddlewareInterface
         if ($class === null) {
             throw new NotFoundHttpException("can not find the route:" . $request->getUri()->getPath());
         }
-        /**
-         * @var ResponseInterface $response
-         */
+
         $response = $class($request->getParsedBody() + $request->getQueryParams(), $request);
         if (!$response instanceof ResponseInterface) {
-            $newResponse = ResponseContext::get();
-            $newResponse->withAttribute(AttributeEnum::RESPONSE_ATTRIBUTE, $response);
+            $newResponse = new Response();
+            $this->handleAccept($request, $newResponse, $response);
         }
 
         return $handler->handle($request);

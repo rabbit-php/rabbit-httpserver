@@ -1,13 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer\WebSocket;
 
-use Rabbit\Base\Helper\JsonHelper;
-use Rabbit\HttpServer\RouteInterface;
-use Rabbit\Server\ServerDispatcher;
-use Rabbit\Web\ErrorHandlerInterface;
 use Swoole\WebSocket\Frame;
+use Rabbit\Web\RequestContext;
+use Rabbit\Web\ResponseContext;
+use Rabbit\Base\Helper\JsonHelper;
+use Rabbit\Server\ServerDispatcher;
+use Rabbit\HttpServer\RouteInterface;
+use Rabbit\Web\ErrorHandlerInterface;
 
 /**
  * Class Route
@@ -68,14 +71,18 @@ class Route implements RouteInterface
                                 $data = JsonHelper::decode($frame->data, true);
                                 $psrRequest = new Request($data, $request);
                                 $psrResponse = new Response($response);
+                                RequestContext::set($psrRequest);
+                                ResponseContext::set($psrResponse);
                                 $this->dispatcher->dispatch($psrRequest, $psrResponse);
+                                $psrResponse->send();
                             }
                         } catch (\Throwable $throw) {
-                            /**
-                             * @var ErrorHandlerInterface $errorHandler
-                             */
-                            $errorHandler = getDI('errorHandler');
-                            $errorHandler->handle($throw)->send();
+                            $errorResponse = getDI('errorResponse', false);
+                            if ($errorResponse === null) {
+                                $response->push("An internal server error occurred.");
+                            } else {
+                                $response->push($errorResponse->handle($throw, $response));
+                            }
                         }
                     }
                 );

@@ -1,20 +1,22 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer;
 
 
-use DI\DependencyException;
-use DI\NotFoundException;
-use Rabbit\Base\Contract\InitInterface;
-use Rabbit\Base\Core\Exception;
-use Rabbit\Base\Helper\FileHelper;
-use Rabbit\HttpServer\Middleware\ReqHandlerMiddleware;
-use Rabbit\HttpServer\Middleware\StartMiddleware;
-use Rabbit\Server\ServerDispatcher;
-use Rabbit\Web\RequestHandler;
-use ReflectionException;
 use Throwable;
+use ReflectionException;
+use DI\NotFoundException;
+use DI\DependencyException;
+use Rabbit\Web\RequestContext;
+use Rabbit\Web\RequestHandler;
+use Rabbit\Base\Core\Exception;
+use Rabbit\Web\ResponseContext;
+use Rabbit\Base\Helper\FileHelper;
+use Rabbit\Server\ServerDispatcher;
+use Rabbit\Base\Contract\InitInterface;
+use Rabbit\HttpServer\Middleware\ReqHandlerMiddleware;
 
 /**
  * Class Server
@@ -38,7 +40,6 @@ class Server extends \Rabbit\Server\Server implements InitInterface
             $this->dispatcher = create(ServerDispatcher::class, [
                 'requestHandler' => create(RequestHandler::class, [
                     'middlewares' => $this->middlewares ? $this->middlewares : [
-                        create(StartMiddleware::class),
                         create(ReqHandlerMiddleware::class)
                     ]
                 ])
@@ -59,14 +60,19 @@ class Server extends \Rabbit\Server\Server implements InitInterface
         $psrRequest = $this->request;
         $psrResponse = $this->response;
         try {
-            $this->dispatcher->dispatch(new $psrRequest($request), new $psrResponse($response));
+            $psrRequest = new $psrRequest($request);
+            $psrResponse = new $psrResponse($response);
+            RequestContext::set($psrRequest);
+            ResponseContext::set($psrResponse);
+            $this->dispatcher->dispatch($psrRequest, $psrResponse);
+            $psrResponse->send();
         } catch (Throwable $throw) {
             $errorResponse = getDI('errorResponse', false);
             if ($errorResponse === null) {
                 $response->status(500);
                 $response->end("An internal server error occurred.");
             } else {
-                $errorResponse->handle($response, $throw);
+                $response->end($errorResponse->handle($throw, $response));
             }
         }
     }

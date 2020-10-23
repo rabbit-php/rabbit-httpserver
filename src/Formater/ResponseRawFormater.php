@@ -19,9 +19,10 @@ class ResponseRawFormater implements ResponseFormaterInterface
     {
         // Headers
         $response = $response->withoutHeader('Content-Type')->withAddedHeader('Content-Type', 'text/plain');
-        $response = $response->withCharset($response->getCharset() ?? "UTF-8");
         // Content
-        $data && $response = $response->withContent($data);
+        $body = $response->getBody();
+        $body->seek(0);
+        $body->write($data);
 
         return $response;
     }

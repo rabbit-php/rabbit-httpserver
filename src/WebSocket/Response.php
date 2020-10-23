@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Rabbit\HttpServer\WebSocket;
 
 use Exception;
+use Rabbit\Web\MessageTrait;
+use Rabbit\Base\Helper\ArrayHelper;
 use Psr\Http\Message\ResponseInterface;
 use Rabbit\Base\Exception\NotSupportedException;
-use Rabbit\Base\Helper\ArrayHelper;
-use Rabbit\Web\MessageTrait;
 
 /**
  * Class Response
@@ -100,20 +100,6 @@ class Response implements ResponseInterface
     }
 
     /**
-     * @param $content
-     * @return Response
-     */
-    public function withContent($content): Response
-    {
-        if ($this->stream) {
-            return $this;
-        }
-
-        $this->stream = $content;
-        return $this;
-    }
-
-    /**
      *
      */
     public function send(): void
@@ -137,23 +123,5 @@ class Response implements ResponseInterface
     public function push(int $fd, string $msg): void
     {
         (new \Swoole\Http\Response($fd))->push($msg);
-    }
-
-    /**
-     * @return string
-     */
-    public function getCharset(): string
-    {
-        return $this->charset;
-    }
-
-    /**
-     * @param string $charset
-     * @return Response
-     */
-    public function withCharset(string $charset): Response
-    {
-        $this->charset = $charset;
-        return $this;
     }
 }

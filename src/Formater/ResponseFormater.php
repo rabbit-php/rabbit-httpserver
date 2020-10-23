@@ -1,13 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Formater;
 
+use Throwable;
+use Rabbit\Web\AttributeEnum;
+use Rabbit\Base\Helper\ArrayHelper;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Rabbit\Base\Helper\ArrayHelper;
-use Rabbit\Web\AttributeEnum;
-use Throwable;
 
 /**
  * Class ResponseFormater
@@ -31,11 +32,10 @@ class ResponseFormater implements IResponseFormatTool
      * @return ResponseInterface
      * @throws Throwable
      */
-    public function format(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    public function format(ServerRequestInterface $request, ResponseInterface $response, &$data): ResponseInterface
     {
         $contentType = $request->getHeaderLine($this->headerKey);
         $formaters = $this->mergeFormaters();
-        $data = $response->getAttribute(AttributeEnum::RESPONSE_ATTRIBUTE);
         if (!isset($formaters[$contentType])) {
             if ($this->default === null) {
                 $this->default = $formater = getDI(ResponseJsonFormater::class);

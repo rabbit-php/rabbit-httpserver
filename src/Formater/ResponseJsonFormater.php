@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Formater;
 
-use Psr\Http\Message\ResponseInterface;
-use Rabbit\Base\Helper\ArrayHelper;
 use Rabbit\Base\Helper\JsonHelper;
+use Rabbit\Base\Helper\ArrayHelper;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class ResponseJsonFormater
@@ -22,12 +23,17 @@ class ResponseJsonFormater implements ResponseFormaterInterface
     {
         // Headers
         $response = $response->withoutHeader('Content-Type')->withAddedHeader('Content-Type', 'application/json');
-        $response = $response->withCharset($response->getCharset() ?? "UTF-8");
 
         // Content
-        $data = ArrayHelper::toArray(['data' => $data]);
+        $data = [
+            'code' => 0,
+            'msg' => 'success',
+            'result' => ArrayHelper::toArray($data)
+        ];
         $content = JsonHelper::encode($data, JSON_UNESCAPED_UNICODE);
-        $response = $response->withContent($content);
+        $body = $response->getBody();
+        $body->seek(0);
+        $body->write($content);
 
         return $response;
     }
