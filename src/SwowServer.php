@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Rabbit\HttpServer;
 
 use Exception;
-use Swow\Coroutine;
 use const Swow\Errno\EMFILE;
+
 use const Swow\Errno\ENFILE;
 use const Swow\Errno\ENOMEM;
 use Rabbit\Web\RequestContext;
 use Swow\Http\Server\Response;
+use Rabbit\Base\Core\Coroutine;
 use Rabbit\Web\ResponseContext;
 use Rabbit\Web\DispatcherInterface;
 use Swow\Http\Server as HttpServer;
@@ -39,12 +40,13 @@ class SwowServer
         while (true) {
             try {
                 $session = $server->acceptSession();
-                Coroutine::run(function () use ($session) {
+                $co = new Coroutine(function () use ($session) {
                     try {
                         while (true) {
                             $request = null;
                             try {
                                 $request = $session->recvHttpRequest();
+                                $request->setServerParams($_SERVER);
                                 $response = new Response();
                                 RequestContext::set($request);
                                 ResponseContext::set($response);
@@ -62,6 +64,7 @@ class SwowServer
                         $session->close();
                     }
                 });
+                $co->resume();
             } catch (SocketException | CoroutineException $exception) {
                 if (in_array($exception->getCode(), [EMFILE, ENFILE, ENOMEM], true)) {
                     sleep(1);

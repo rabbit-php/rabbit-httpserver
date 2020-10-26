@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Middleware;
 
-use Throwable;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Rabbit\HttpServer\Formater\ResponseFormater;

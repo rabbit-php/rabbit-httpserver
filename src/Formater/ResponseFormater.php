@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Rabbit\HttpServer\Formater;
 
 use Throwable;
-use Rabbit\Web\AttributeEnum;
 use Rabbit\Base\Helper\ArrayHelper;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

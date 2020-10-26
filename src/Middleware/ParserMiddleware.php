@@ -1,15 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Middleware;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-use Rabbit\HttpServer\Parser\RequestParser;
-use Rabbit\HttpServer\Parser\RequestParserInterface;
 use Throwable;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Rabbit\HttpServer\Parser\RequestParser;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Rabbit\HttpServer\Parser\RequestParserInterface;
 
 /**
  * Class ParserMiddleware
@@ -17,10 +18,12 @@ use Throwable;
  */
 class ParserMiddleware implements MiddlewareInterface
 {
-    /**
-     * @var RequestParserInterface
-     */
-    private RequestParserInterface $parser;
+    private ?RequestParserInterface $parser = null;
+
+    public function __construct(RequestParserInterface $parser = null)
+    {
+        $this->parser = $parser;
+    }
 
     /**
      * @param ServerRequestInterface $request

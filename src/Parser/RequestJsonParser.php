@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Parser;
 
+use Rabbit\Base\Helper\JsonHelper;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Rabbit\Base\Helper\JsonHelper;
 
 /**
  * Class RequestJsonParser
@@ -22,6 +23,7 @@ class RequestJsonParser implements RequestParserInterface
         if ($request instanceof RequestInterface && strtoupper($request->getMethod()) !== 'GET') {
             $bodyStream = $request->getBody();
             $bodyContent = $bodyStream->getContents();
+            $bodyContent = empty($bodyContent) ? "{}" : $bodyContent;
             try {
                 $bodyParams = JsonHelper::decode($bodyContent, true);
             } catch (\Exception $e) {

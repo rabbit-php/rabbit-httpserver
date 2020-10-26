@@ -6,7 +6,6 @@ namespace Rabbit\HttpServer\WebSocket;
 
 use Exception;
 use Rabbit\Web\MessageTrait;
-use Rabbit\Base\Helper\ArrayHelper;
 use Psr\Http\Message\ResponseInterface;
 use Rabbit\Base\Exception\NotSupportedException;
 

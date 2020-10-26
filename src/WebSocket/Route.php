@@ -10,7 +10,6 @@ use Rabbit\Web\ResponseContext;
 use Rabbit\Base\Helper\JsonHelper;
 use Rabbit\Server\ServerDispatcher;
 use Rabbit\HttpServer\RouteInterface;
-use Rabbit\Web\ErrorHandlerInterface;
 
 /**
  * Class Route

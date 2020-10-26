@@ -5,7 +5,6 @@ namespace Rabbit\HttpServer;
 
 use rabbit\web\Cookie;
 use rabbit\web\MessageTrait;
-use rabbit\web\SwooleStream;
 use Rabbit\Base\Helper\FileHelper;
 use Psr\Http\Message\ResponseInterface;
 
