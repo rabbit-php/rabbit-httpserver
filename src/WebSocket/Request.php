@@ -1,13 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer\WebSocket;
 
-use Psr\Http\Message\ServerRequestInterface;
+use Rabbit\Web\Uri;
+use Rabbit\Web\MessageTrait;
 use Psr\Http\Message\UriInterface;
 use Rabbit\Base\Helper\ArrayHelper;
-use Rabbit\Web\MessageTrait;
-use Rabbit\Web\Uri;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class Request
@@ -104,9 +105,9 @@ class Request implements ServerRequestInterface
      */
     public function withAttribute($name, $value)
     {
-        $clone = $this;
-        $clone->attributes[$name] = $value;
-        return $clone;
+
+        $this->attributes[$name] = $value;
+        return $this;
     }
 
     /**
@@ -115,9 +116,9 @@ class Request implements ServerRequestInterface
      */
     public function withParsedBody($data)
     {
-        $clone = $this;
-        $clone->parsedBody = $data;
-        return $clone;
+
+        $this->parsedBody = $data;
+        return $this;
     }
 
     /**
@@ -126,9 +127,9 @@ class Request implements ServerRequestInterface
      */
     public function withQueryParams(array $query)
     {
-        $clone = $this;
-        $clone->queryParams = $query;
-        return $clone;
+
+        $this->queryParams = $query;
+        return $this;
     }
 
     /**
@@ -215,9 +216,9 @@ class Request implements ServerRequestInterface
      */
     public function withServerParams(array $serverParams): Request
     {
-        $clone = $this;
-        $clone->serverParams = $serverParams;
-        return $clone;
+
+        $this->serverParams = $serverParams;
+        return $this;
     }
 
     /**
@@ -226,9 +227,9 @@ class Request implements ServerRequestInterface
      */
     public function withCookieParams(array $cookies)
     {
-        $clone = $this;
-        $clone->cookieParams = $cookies;
-        return $clone;
+
+        $this->cookieParams = $cookies;
+        return $this;
     }
 
     /**
@@ -269,9 +270,9 @@ class Request implements ServerRequestInterface
      */
     public function withUploadedFiles(array $uploadedFiles)
     {
-        $clone = $this;
-        $clone->uploadedFiles = $uploadedFiles;
-        return $clone;
+
+        $this->uploadedFiles = $uploadedFiles;
+        return $this;
     }
 
     /**
@@ -310,10 +311,10 @@ class Request implements ServerRequestInterface
             return $this;
         }
 
-        $clone = $this;
-        unset($clone->attributes[$name]);
 
-        return $clone;
+        unset($this->attributes[$name]);
+
+        return $this;
     }
 
     /**
@@ -346,9 +347,9 @@ class Request implements ServerRequestInterface
             throw new \InvalidArgumentException('Invalid request target provided; cannot contain whitespace');
         }
 
-        $clone = $this;
-        $clone->requestTarget = $requestTarget;
-        return $clone;
+
+        $this->requestTarget = $requestTarget;
+        return $this;
     }
 
     /**
@@ -370,9 +371,9 @@ class Request implements ServerRequestInterface
         if (!in_array($method, $methods)) {
             throw new \InvalidArgumentException('Invalid Method');
         }
-        $clone = $this;
-        $clone->method = $method;
-        return $clone;
+
+        $this->method = $method;
+        return $this;
     }
 
     /**
@@ -394,14 +395,14 @@ class Request implements ServerRequestInterface
             return $this;
         }
 
-        $clone = $this;
-        $clone->uri = $uri;
+
+        $this->uri = $uri;
 
         if (!$preserveHost) {
-            $clone->updateHostFromUri();
+            $this->updateHostFromUri();
         }
 
-        return $clone;
+        return $this;
     }
 
     /**

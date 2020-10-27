@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer;
@@ -114,13 +115,13 @@ class Response implements ResponseInterface
      */
     public function withStatus($code, $reasonPhrase = '')
     {
-        $clone = &$this;
-        $clone->statusCode = (int)$code;
+
+        $this->statusCode = (int)$code;
         if (!$reasonPhrase && isset(self::$phrases[$code])) {
             $reasonPhrase = self::$phrases[$code];
         }
-        $clone->reasonPhrase = $reasonPhrase;
-        return $clone;
+        $this->reasonPhrase = $reasonPhrase;
+        return $this;
     }
 
     /**
@@ -210,9 +211,9 @@ class Response implements ResponseInterface
      */
     public function withCookie(Cookie $cookie): Response
     {
-        $clone = &$this;
-        $clone->cookies[$cookie->getDomain()][$cookie->getPath()][$cookie->getName()] = $cookie;
-        return $clone;
+
+        $this->cookies[$cookie->getDomain()][$cookie->getPath()][$cookie->getName()] = $cookie;
+        return $this;
     }
 
     /**
