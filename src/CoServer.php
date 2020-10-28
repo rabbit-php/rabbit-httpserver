@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer;
@@ -10,7 +11,7 @@ use Rabbit\Base\Exception\InvalidArgumentException;
  * Class CoServer
  * @package Rabbit\HttpServer
  */
-class CoServer extends \rabbit\server\CoServer
+class CoServer extends \Rabbit\Server\CoServer
 {
     /** @var RouteInterface */
     public RouteInterface $route;

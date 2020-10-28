@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Rabbit\HttpServer;
 
-use rabbit\web\Cookie;
-use rabbit\web\MessageTrait;
+use Rabbit\Web\Cookie;
+use Rabbit\Web\MessageTrait;
 use Rabbit\Base\Helper\FileHelper;
 use Psr\Http\Message\ResponseInterface;
 
