@@ -141,7 +141,7 @@ class Request implements ServerRequestInterface
                 list($host, $port) = explode(':', $header['host'], 2);
 
                 if ($port !== '80') {
-                    $uri = $uri->withPort($port);
+                    $uri = $uri->withPort((int)$port);
                 }
             } else {
                 $host = $header['host'];
