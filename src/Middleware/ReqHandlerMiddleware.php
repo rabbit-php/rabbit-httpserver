@@ -46,7 +46,7 @@ class ReqHandlerMiddleware implements MiddlewareInterface
             throw new NotFoundHttpException("can not find the route:" . $request->getUri()->getPath());
         }
 
-        $response = $class($request->getParsedBody() + $request->getQueryParams(), $request);
+        $response = $class($request);
         if (!$response instanceof ResponseInterface) {
             $newResponse = ResponseContext::get();
             return $this->handleAccept($request, $newResponse, $response);
