@@ -37,7 +37,7 @@ class Server extends \Rabbit\Server\Server implements InitInterface
         if (!$this->dispatcher) {
             $this->dispatcher = create(ServerDispatcher::class, [
                 'requestHandler' => create(RequestHandler::class, [
-                    'middlewares' => $this->middlewares ? $this->middlewares : [
+                    'middlewares' => $this->middlewares ? array_values($this->middlewares) : [
                         create(ReqHandlerMiddleware::class)
                     ]
                 ])
@@ -46,6 +46,7 @@ class Server extends \Rabbit\Server\Server implements InitInterface
         if (!is_dir(dirname($this->setting['log_file']))) {
             FileHelper::createDirectory(dirname($this->setting['log_file']));
         }
+        unset($this->middlewares);
     }
 
     /**
