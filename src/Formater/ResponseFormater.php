@@ -33,7 +33,7 @@ class ResponseFormater implements IResponseFormatTool
      */
     public function format(ServerRequestInterface $request, ResponseInterface $response, &$data): ResponseInterface
     {
-        $contentType = $request->getHeaderLine($this->headerKey);
+        $contentType = current(explode(';', $request->getHeaderLine($this->headerKey)));
         $formaters = $this->mergeFormaters();
         if (!isset($formaters[$contentType])) {
             if ($this->default === null) {
@@ -42,7 +42,6 @@ class ResponseFormater implements IResponseFormatTool
                 $formater = $this->default;
             }
         } else {
-            /* @var ResponseFormaterInterface $formater */
             $formaterName = $formaters[$contentType];
             $formater = getDI($formaterName);
         }
@@ -55,7 +54,7 @@ class ResponseFormater implements IResponseFormatTool
      */
     private function mergeFormaters(): array
     {
-        return ArrayHelper::merge($this->formaters, $this->defaultFormaters());
+        return ArrayHelper::merge($this->defaultFormaters(), $this->formaters);
     }
 
     /**
