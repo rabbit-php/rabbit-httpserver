@@ -16,13 +16,8 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class CorsMiddleware implements MiddlewareInterface
 {
-    /** @var array */
     private array $config = [];
 
-    /**
-     * CorsMiddleware constructor.
-     * @param array $config
-     */
     public function __construct(array $config)
     {
         $this->config = $config;

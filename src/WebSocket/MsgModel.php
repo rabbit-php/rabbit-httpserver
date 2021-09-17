@@ -1,7 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer\WebSocket;
+
 use Rabbit\Server\CoServer;
 use Rabbit\Server\ServerHelper;
 
@@ -11,10 +13,9 @@ use Rabbit\Server\ServerHelper;
  */
 class MsgModel
 {
-    /** @var mixed */
-    protected $params;
+    protected string|array|object|float|int|bool|null $params;
 
-    public function __construct($params)
+    public function __construct(string|array|object|float|int|bool|null $params)
     {
         $this->params = $params;
     }

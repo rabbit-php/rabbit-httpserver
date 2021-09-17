@@ -13,13 +13,5 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 interface IResponseFormatTool
 {
-    /**
-     * @Author Albert 63851587@qq.com
-     * @DateTime 2020-10-23
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @param [type] $data
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function format(ServerRequestInterface $request, ResponseInterface $response, &$data): ResponseInterface;
+    public function format(ServerRequestInterface $request, ResponseInterface $response, string|array|object|float|int|bool|null &$data): ResponseInterface;
 }

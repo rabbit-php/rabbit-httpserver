@@ -8,6 +8,8 @@ use Rabbit\Web\RequestContext;
 use Rabbit\Web\ResponseContext;
 use Rabbit\Server\ServerDispatcher;
 use Rabbit\Web\DispatcherInterface;
+use Swoole\Coroutine\Http\Server;
+use Swoole\Coroutine\Server as CoroutineServer;
 
 /**
  * Class Route
@@ -15,25 +17,14 @@ use Rabbit\Web\DispatcherInterface;
  */
 class Route implements RouteInterface
 {
-    /**
-     * @var DispatcherInterface
-     */
     protected DispatcherInterface $dispatcher;
 
-    /**
-     * Route constructor.
-     * @param ServerDispatcher $dispatcher
-     */
     public function __construct(ServerDispatcher $dispatcher)
     {
         $this->dispatcher = $dispatcher;
     }
 
-    /**
-     * @param $server
-     * @return mixed|void
-     */
-    public function handle($server)
+    public function handle(Server|CoroutineServer $server): void
     {
         $server->handle('/', function (\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
             try {

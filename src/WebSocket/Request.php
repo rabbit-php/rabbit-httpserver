@@ -18,61 +18,26 @@ class Request implements ServerRequestInterface
 {
     use MessageTrait;
 
-    /**
-     * @var \Swoole\Http\Request
-     */
     protected \Swoole\Http\Request $swooleRequest;
 
-    /**
-     * @var array
-     */
     private array $attributes = [];
 
-    /**
-     * @var array
-     */
     private array $cookieParams = [];
 
-    /**
-     * @var null|array|object
-     */
-    private $parsedBody;
+    private string|array|null $parsedBody = null;
 
-    /**
-     * @var array
-     */
     private array $queryParams = [];
 
-    /**
-     * @var array
-     */
     private array $serverParams = [];
 
-    /**
-     * @var array
-     */
     private array $uploadedFiles = [];
 
-    /**
-     * @var string
-     */
-    private $method;
+    private ?string $method = null;
 
-    /**
-     * @var UriInterface
-     */
     private UriInterface $uri;
 
-    /**
-     * @var string
-     */
     private string $requestTarget;
 
-    /**
-     * Request constructor.
-     * @param array $data
-     * @param \Swoole\Http\Request|null $swooleRequest
-     */
     public function __construct(array $data, \Swoole\Http\Request $swooleRequest = null)
     {
         [$query, $body] = ArrayHelper::getValueByArray($data, ['query', 'body'], [[], []]);
@@ -98,11 +63,6 @@ class Request implements ServerRequestInterface
         $this->uri->withPath(ArrayHelper::remove($data, 'cmd'));
     }
 
-    /**
-     * @param string $name
-     * @param mixed $value
-     * @return Request|static
-     */
     public function withAttribute($name, $value)
     {
 
@@ -110,13 +70,8 @@ class Request implements ServerRequestInterface
         return $this;
     }
 
-    /**
-     * @param array|null|object $data
-     * @return Request|static
-     */
     public function withParsedBody($data)
     {
-
         $this->parsedBody = $data;
         return $this;
     }
@@ -270,7 +225,6 @@ class Request implements ServerRequestInterface
      */
     public function withUploadedFiles(array $uploadedFiles)
     {
-
         $this->uploadedFiles = $uploadedFiles;
         return $this;
     }
@@ -311,7 +265,6 @@ class Request implements ServerRequestInterface
             return $this;
         }
 
-
         unset($this->attributes[$name]);
 
         return $this;
@@ -347,23 +300,15 @@ class Request implements ServerRequestInterface
             throw new \InvalidArgumentException('Invalid request target provided; cannot contain whitespace');
         }
 
-
         $this->requestTarget = $requestTarget;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getMethod()
     {
         return $this->method;
     }
 
-    /**
-     * @param string $method
-     * @return Request|static
-     */
     public function withMethod($method)
     {
         $method = strtoupper($method);
@@ -394,7 +339,6 @@ class Request implements ServerRequestInterface
         if ($uri === $this->uri) {
             return $this;
         }
-
 
         $this->uri = $uri;
 
@@ -429,18 +373,11 @@ class Request implements ServerRequestInterface
         $this->headers = [$header => [$host]] + $this->headers;
     }
 
-    /**
-     * @return \Swoole\Http\Request
-     */
     public function getSwooleRequest(): \Swoole\Http\Request
     {
         return $this->swooleRequest;
     }
 
-    /**
-     * @param \Swoole\Http\Request $swooleRequest
-     * @return $this
-     */
     public function setSwooleRequest(\Swoole\Http\Request $swooleRequest): Request
     {
         $this->swooleRequest = $swooleRequest;

@@ -26,12 +26,6 @@ class Server extends \Rabbit\Server\Server implements InitInterface
 {
     private array $middlewares = [];
 
-    /**
-     * @throws DependencyException
-     * @throws Exception
-     * @throws NotFoundException
-     * @throws ReflectionException
-     */
     public function init(): void
     {
         if (!$this->dispatcher) {
@@ -49,11 +43,6 @@ class Server extends \Rabbit\Server\Server implements InitInterface
         unset($this->middlewares);
     }
 
-    /**
-     * @param \Swoole\Http\Request $request
-     * @param \Swoole\Http\Response $response
-     * @throws Throwable
-     */
     public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response): void
     {
         try {
@@ -73,19 +62,11 @@ class Server extends \Rabbit\Server\Server implements InitInterface
         }
     }
 
-    /**
-     * @return \Swoole\Server
-     */
     protected function createServer(): \Swoole\Server
     {
         return new \Swoole\Http\Server($this->host, $this->port, $this->type);
     }
 
-    /**
-     * @param \Swoole\Server|null $server
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
     protected function startServer(\Swoole\Server $server = null): void
     {
         parent::startServer($server);

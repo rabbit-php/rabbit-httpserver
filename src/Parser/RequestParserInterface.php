@@ -11,9 +11,5 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 interface RequestParserInterface
 {
-    /**
-     * @param ServerRequestInterface $request
-     * @return ServerRequestInterface
-     */
     public function parse(ServerRequestInterface $request): ServerRequestInterface;
 }

@@ -17,20 +17,11 @@ class HealthCheckMiddleware implements MiddlewareInterface
 {
     protected ?string $health;
 
-    /**
-     * ReqHandlerMiddleware constructor.
-     * @param string|null $health
-     */
     public function __construct(string $health = '/health')
     {
         $this->health = $health;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
-     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $url = $request->getUri()->getPath();

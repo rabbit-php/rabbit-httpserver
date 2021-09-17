@@ -10,38 +10,26 @@ use Rabbit\Web\ResponseContext;
 use Rabbit\Base\Helper\JsonHelper;
 use Rabbit\Server\ServerDispatcher;
 use Rabbit\HttpServer\RouteInterface;
+use Swoole\Coroutine\Http\Server;
+use Swoole\Coroutine\Server as CoroutineServer;
 
-/**
- * Class Route
- * @package rabbit\httpserver\websocket
- */
 class Route implements RouteInterface
 {
-    /** @var array */
     protected array $routes = [];
-    /** @var ServerDispatcher */
+
     protected ServerDispatcher $dispatcher;
-    /** @var CloseHandlerInterface */
+
     protected CloseHandlerInterface $closeHandler;
-    /** @var \Swoole\Http\Response[] */
+
     protected array $responses = [];
 
-    /**
-     * Server constructor.
-     * @param ServerDispatcher $dispatcher
-     * @param array $routes
-     */
     public function __construct(ServerDispatcher $dispatcher, array $routes = [])
     {
         $this->dispatcher = $dispatcher;
         $this->routes = $routes;
     }
 
-    /**
-     * @param $server
-     * @return mixed|void
-     */
-    public function handle($server)
+    public function handle(Server|CoroutineServer $server): void
     {
         foreach ($this->routes as $handShake => $route) {
             foreach ($route as $item) {
@@ -52,7 +40,7 @@ class Route implements RouteInterface
                         $item
                     ) {
                         try {
-                            if (is_string($handShake) && $handShake = getDI($handShake) && $handShake instanceof HandShakeInterface) {
+                            if (is_string($handShake) && ($handShake = getDI($handShake)) && $handShake instanceof HandShakeInterface) {
                                 if (!$handShake->checkHandshake($request, $response)) {
                                     return;
                                 }

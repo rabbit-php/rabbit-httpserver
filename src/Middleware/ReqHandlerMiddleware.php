@@ -23,12 +23,6 @@ class ReqHandlerMiddleware implements MiddlewareInterface
     protected string $handlers = 'Handlers';
     protected bool $isUper = true;
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
-     * @throws Throwable
-     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $route = explode('/', ltrim($request->getUri()->getPath(), '/'));

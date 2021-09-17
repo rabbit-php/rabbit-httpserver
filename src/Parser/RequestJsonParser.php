@@ -14,10 +14,6 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class RequestJsonParser implements RequestParserInterface
 {
-    /**
-     * @param ServerRequestInterface $request
-     * @return ServerRequestInterface
-     */
     public function parse(ServerRequestInterface $request): ServerRequestInterface
     {
         if ($request instanceof RequestInterface && strtoupper($request->getMethod()) !== 'GET') {

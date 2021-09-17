@@ -14,10 +14,6 @@ use Rabbit\Base\Helper\XmlHelper;
  */
 class RequestXmlParser implements RequestParserInterface
 {
-    /**
-     * @param ServerRequestInterface $request
-     * @return ServerRequestInterface
-     */
     public function parse(ServerRequestInterface $request): ServerRequestInterface
     {
         if ($request instanceof RequestInterface) {

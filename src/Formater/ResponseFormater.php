@@ -18,20 +18,9 @@ class ResponseFormater implements IResponseFormatTool
     private array $formaters = [];
     private ?ResponseFormaterInterface $default = null;
 
-    /**
-     * The of header
-     *
-     * @var string
-     */
     private string $headerKey = 'Content-type';
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @return ResponseInterface
-     * @throws Throwable
-     */
-    public function format(ServerRequestInterface $request, ResponseInterface $response, &$data): ResponseInterface
+    public function format(ServerRequestInterface $request, ResponseInterface $response, string|array|object|float|int|bool|null &$data): ResponseInterface
     {
         $contentType = current(explode(';', $request->getHeaderLine($this->headerKey)));
         $formaters = $this->mergeFormaters();
@@ -49,19 +38,11 @@ class ResponseFormater implements IResponseFormatTool
         return $formater->format($response, $data);
     }
 
-    /**
-     * @return array
-     */
     private function mergeFormaters(): array
     {
         return ArrayHelper::merge($this->defaultFormaters(), $this->formaters);
     }
 
-    /**
-     * Default parsers
-     *
-     * @return array
-     */
     public function defaultFormaters(): array
     {
         return [

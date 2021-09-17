@@ -6,6 +6,8 @@ namespace Rabbit\HttpServer;
 
 
 use Rabbit\Base\Exception\InvalidArgumentException;
+use Swoole\Coroutine\Http\Server;
+use Swoole\Coroutine\Server as CoroutineServer;
 
 /**
  * Class CoServer
@@ -13,23 +15,16 @@ use Rabbit\Base\Exception\InvalidArgumentException;
  */
 class CoServer extends \Rabbit\Server\CoServer
 {
-    /** @var RouteInterface */
     public RouteInterface $route;
-    /** @var RouteInterface */
+
     public RouteInterface $wsRoute;
 
-    /**
-     * @return \Co\Http\Server
-     */
-    protected function createServer()
+    protected function createServer(): CoroutineServer|Server
     {
-        return new \Co\Http\Server($this->host, $this->port, $this->ssl, true);
+        return new CoroutineServer($this->host, $this->port, $this->ssl, true);
     }
 
-    /**
-     * @param null $server
-     */
-    protected function startServer($server = null): void
+    protected function startServer(CoroutineServer|Server $server = null): void
     {
         parent::startServer($server);
         if (!$this->route instanceof RouteInterface) {

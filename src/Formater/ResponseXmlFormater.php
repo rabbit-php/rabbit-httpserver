@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Formater;
@@ -17,38 +18,19 @@ use Psr\Http\Message\ResponseInterface;
  */
 class ResponseXmlFormater implements ResponseFormaterInterface
 {
-    /**
-     * @var bool whether to interpret objects implementing the [[\Traversable]] interface as arrays.
-     * Defaults to `true`.
-     */
     public bool $useTraversableAsArray = true;
-    /**
-     * @var bool if object tags should be added
-     */
+
     public bool $useObjectTags = true;
-    /**
-     * @var string the Content-Type header for the response
-     */
+
     private string $contentType = 'application/xml';
-    /**
-     * @var string the XML version
-     */
+
     private string $version = '1.0';
-    /**
-     * @var string the name of the root element. If set to false, null or is empty then no root tag should be added.
-     */
+
     private string $rootTag = 'response';
-    /**
-     * @var string the name of the elements that represent the array elements with numeric keys.
-     */
+
     private string $itemTag = 'item';
 
-    /**
-     * @param ResponseInterface $response
-     * @param $data
-     * @return ResponseInterface
-     */
-    public function format(ResponseInterface $response, $data): ResponseInterface
+    public function format(ResponseInterface $response, string|array|object|float|int|bool|null &$data): ResponseInterface
     {
         // Headers
         $response = $response->withoutHeader('Content-Type')->withAddedHeader('Content-Type', $this->contentType);
@@ -68,13 +50,10 @@ class ResponseXmlFormater implements ResponseFormaterInterface
         return $response;
     }
 
-    /**
-     * @param DOMElement $element
-     * @param mixed $data
-     */
-    protected function buildXml($element, $data)
+    protected function buildXml(DOMDocument|DOMElement $element, &$data)
     {
-        if (is_array($data) ||
+        if (
+            is_array($data) ||
             ($data instanceof \Traversable && $this->useTraversableAsArray && !$data instanceof Arrayable)
         ) {
             foreach ($data as $name => $value) {
@@ -111,12 +90,7 @@ class ResponseXmlFormater implements ResponseFormaterInterface
         }
     }
 
-    /**
-     * @param $name
-     * @return string
-     * @throws DOMException
-     */
-    protected function getValidXmlElementName($name)
+    protected function getValidXmlElementName(string|int $name)
     {
         if (empty($name) || is_int($name) || !$this->isValidXmlName($name)) {
             return $this->itemTag;
@@ -125,12 +99,7 @@ class ResponseXmlFormater implements ResponseFormaterInterface
         return $name;
     }
 
-    /**
-     * @param $name
-     * @return bool
-     * @throws DOMException
-     */
-    protected function isValidXmlName($name)
+    protected function isValidXmlName(string|int $name)
     {
         try {
             new DOMElement($name);
@@ -140,13 +109,7 @@ class ResponseXmlFormater implements ResponseFormaterInterface
         }
     }
 
-    /**
-     * Formats scalar value to use in XML text node.
-     *
-     * @param int|string|bool|float $value a scalar value.
-     * @return string string representation of the value.
-     */
-    protected function formatScalarValue($value)
+    protected function formatScalarValue(int|string|bool|float $value)
     {
         if ($value === true) {
             return 'true';

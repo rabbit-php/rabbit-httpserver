@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer\WebSocket;
@@ -11,8 +12,5 @@ use Swoole\Websocket\Frame;
  */
 interface CloseHandlerInterface
 {
-    /**
-     * @param Frame $frame
-     */
     public function handle(Frame $frame): void;
 }

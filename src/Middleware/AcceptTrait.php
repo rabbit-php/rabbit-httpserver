@@ -17,15 +17,7 @@ trait AcceptTrait
 {
     protected ?IResponseFormatTool $formater = null;
 
-    /**
-     * @Author Albert 63851587@qq.com
-     * @DateTime 2020-10-23
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @param [type] $data
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    protected function handleAccept(ServerRequestInterface $request, ResponseInterface $response, &$data): ResponseInterface
+    protected function handleAccept(ServerRequestInterface $request, ResponseInterface $response, string|array|object|float|int|bool|null &$data): ResponseInterface
     {
         // Only handle HTTP-Server Response
         if (!$response instanceof ResponseInterface) {

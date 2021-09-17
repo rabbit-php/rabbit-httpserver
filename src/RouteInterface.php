@@ -1,7 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer;
+
+use Swoole\Coroutine\Http\Server;
+use Swoole\Coroutine\Server as CoroutineServer;
 
 /**
  * Interface RouteInterface
@@ -9,9 +13,5 @@ namespace Rabbit\HttpServer;
  */
 interface RouteInterface
 {
-    /**
-     * @param $server
-     * @return mixed
-     */
-    public function handle($server);
+    public function handle(Server|CoroutineServer $server): void;
 }

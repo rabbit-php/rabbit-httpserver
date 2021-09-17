@@ -16,9 +16,7 @@ use Psr\Http\Message\ResponseInterface;
 class Response implements ResponseInterface
 {
     use MessageTrait;
-    /**
-     * @var array
-     */
+
     public static array $phrases = [
         100 => 'Continue',
         101 => 'Switching Protocols',
@@ -79,40 +77,19 @@ class Response implements ResponseInterface
         508 => 'Loop Detected',
         511 => 'Network Authentication Required',
     ];
-    /** @var bool */
+
     private bool $_isSend = false;
-    /**
-     * swoole响应请求
-     *
-     * @var \Swoole\Http\Response
-     */
+
     private \Swoole\Http\Response $swooleResponse;
 
-    /**
-     * @var string
-     */
     private string $reasonPhrase = '';
 
-    /**
-     * @var int
-     */
     private int $statusCode = 200;
 
-    /**
-     * @var string
-     */
     private string $charset = 'utf-8';
 
-    /**
-     * @var array
-     */
     private array $cookies = [];
 
-    /**
-     * @param int $code
-     * @param string $reasonPhrase
-     * @return Response|static
-     */
     public function withStatus($code, $reasonPhrase = '')
     {
 
@@ -124,17 +101,11 @@ class Response implements ResponseInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getReasonPhrase()
     {
         return $this->reasonPhrase;
     }
 
-    /**
-     *
-     */
     public function sendHeaders(): void
     {
         // Write Headers to swoole response
@@ -147,9 +118,6 @@ class Response implements ResponseInterface
         }
     }
 
-    /**
-     *
-     */
     public function sendCookies(): void
     {
         foreach ((array)$this->cookies as $domain => $paths) {
@@ -171,9 +139,6 @@ class Response implements ResponseInterface
         }
     }
 
-    /**
-     * 处理 Response 并发送数据
-     */
     public function send(): void
     {
         /**
@@ -197,18 +162,11 @@ class Response implements ResponseInterface
         $this->swooleResponse->end($this->getBody()->getContents());
     }
 
-    /**
-     * @return int
-     */
     public function getStatusCode()
     {
         return $this->statusCode;
     }
 
-    /**
-     * @param Cookie $cookie
-     * @return Response
-     */
     public function withCookie(Cookie $cookie): Response
     {
 
@@ -216,11 +174,6 @@ class Response implements ResponseInterface
         return $this;
     }
 
-    /**
-     * @param string $filePath
-     * @param string|null $attachmentName
-     * @param array $options
-     */
     public function sendFile(string $filePath, string $attachmentName = null, array $options = []): void
     {
         if ($this->_isSend) {
@@ -244,11 +197,6 @@ class Response implements ResponseInterface
         $this->_isSend = true;
     }
 
-    /**
-     * @param string $content
-     * @param string|null $attachmentName
-     * @param array $options
-     */
     public function sendFileContent(string $content, string $attachmentName, array $options = []): void
     {
         if ($this->_isSend) {
@@ -280,10 +228,6 @@ class Response implements ResponseInterface
         }
     }
 
-    /**
-     * @param string $chuck
-     * @return bool
-     */
     public function sendChuck(string $chuck): bool
     {
         if ($this->_isSend) {
@@ -292,18 +236,11 @@ class Response implements ResponseInterface
         return $this->swooleResponse->write($chuck);
     }
 
-    /**
-     * @return \Swoole\Http\Response
-     */
     public function getSwooleResponse(): \Swoole\Http\Response
     {
         return $this->swooleResponse;
     }
 
-    /**
-     * @param \Swoole\Http\Response $response
-     * @return Response
-     */
     public function setSwooleResponse(\Swoole\Http\Response $response): self
     {
         $this->swooleResponse = $response;

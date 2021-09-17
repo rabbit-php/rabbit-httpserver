@@ -14,12 +14,7 @@ use Psr\Http\Message\ResponseInterface;
  */
 class ResponseJsonFormater implements ResponseFormaterInterface
 {
-
-    /**
-     * @param ResponseInterface $response
-     * @return ResponseInterface
-     */
-    public function format(ResponseInterface $response, $data): ResponseInterface
+    public function format(ResponseInterface $response, string|array|object|float|int|bool|null &$data): ResponseInterface
     {
         // Headers
         $response = $response->withoutHeader('Content-Type')->withAddedHeader('Content-Type', 'application/json');
