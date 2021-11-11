@@ -23,7 +23,7 @@ class RequestJsonParser implements RequestParserInterface
             try {
                 $bodyParams = JsonHelper::decode($bodyContent, true);
             } catch (\Exception $e) {
-                $bodyParams = $bodyContent;
+                $bodyParams = [];
             }
             $bodyParams = array_merge($request->getParsedBody(), $bodyParams);
             return $request->withParsedBody($bodyParams);
