@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Parser;
@@ -23,7 +24,7 @@ class RequestXmlParser implements RequestParserInterface
             } catch (\Exception $e) {
                 $bodyParams = $bodyContent;
             }
-            $bodyParams = array_merge($request->getParsedBody(), $bodyParams);
+            $bodyParams = [...$request->getParsedBody(), ...$bodyParams];
             return $request->withParsedBody($bodyParams);
         }
 

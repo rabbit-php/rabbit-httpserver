@@ -21,7 +21,7 @@ class RequestJsonParser implements RequestParserInterface
             $bodyContent = $bodyStream->getContents();
             $bodyContent = empty($bodyContent) ? "{}" : $bodyContent;
             $bodyParams = JsonHelper::decode($bodyContent, true);
-            $bodyParams = array_merge($request->getParsedBody(), $bodyParams);
+            $bodyParams = [...$request->getParsedBody(), ...$bodyParams];
             return $request->withParsedBody($bodyParams);
         }
 
