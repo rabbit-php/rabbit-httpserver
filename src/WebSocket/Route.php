@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rabbit\HttpServer\WebSocket;
 
+use Rabbit\Base\Exception\InvalidArgumentException;
 use Swoole\WebSocket\Frame;
 use Rabbit\Web\RequestContext;
 use Rabbit\Web\ResponseContext;
@@ -12,6 +13,7 @@ use Rabbit\Server\ServerDispatcher;
 use Rabbit\HttpServer\RouteInterface;
 use Swoole\Coroutine\Http\Server;
 use Swoole\Coroutine\Server as CoroutineServer;
+use Throwable;
 
 class Route implements RouteInterface
 {
@@ -49,6 +51,9 @@ class Route implements RouteInterface
                                     !empty($this->closeHandler) && $this->closeHandler->handle($frame);
                                     return;
                                 }
+                                if (!JsonHelper::valid($frame->data)) {
+                                    throw new InvalidArgumentException("param is not JSON");
+                                }
                                 $data = JsonHelper::decode($frame->data, true);
                                 $psrRequest = new Request($data, $request);
                                 $psrResponse = new Response();
@@ -56,7 +61,7 @@ class Route implements RouteInterface
                                 ResponseContext::set($psrResponse);
                                 $this->dispatcher->dispatch($psrRequest)->setSwooleResponse($response)->send();
                             }
-                        } catch (\Throwable $throw) {
+                        } catch (Throwable $throw) {
                             $errorResponse = getDI('errorResponse', false);
                             if ($errorResponse === null) {
                                 $response->push("An internal server error occurred.");
