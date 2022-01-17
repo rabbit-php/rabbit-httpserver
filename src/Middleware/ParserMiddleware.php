@@ -18,11 +18,8 @@ use Rabbit\HttpServer\Parser\RequestParserInterface;
  */
 class ParserMiddleware implements MiddlewareInterface
 {
-    private ?RequestParserInterface $parser = null;
-
-    public function __construct(RequestParserInterface $parser = null)
+    public function __construct(private ?RequestParserInterface $parser = null)
     {
-        $this->parser = $parser;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

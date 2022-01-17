@@ -18,8 +18,6 @@ class Request implements ServerRequestInterface
 {
     use MessageTrait;
 
-    protected \Swoole\Http\Request $swooleRequest;
-
     private array $attributes = [];
 
     private array $cookieParams = [];
@@ -38,7 +36,7 @@ class Request implements ServerRequestInterface
 
     private string $requestTarget;
 
-    public function __construct(array $data, \Swoole\Http\Request $swooleRequest = null)
+    public function __construct(array $data, protected ?\Swoole\Http\Request $swooleRequest = null)
     {
         [$query, $body] = ArrayHelper::getValueByArray($data, ['query', 'body'], [[], []]);
         $this->withQueryParams($query)

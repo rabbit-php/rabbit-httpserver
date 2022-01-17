@@ -13,11 +13,8 @@ use Rabbit\Server\ServerHelper;
  */
 class MsgModel
 {
-    protected string|array|object|float|int|bool|null $params;
-
-    public function __construct(string|array|object|float|int|bool|null $params)
+    public function __construct(protected string|array|object|float|int|bool|null $params)
     {
-        $this->params = $params;
     }
 
     public function handle(): void

@@ -21,16 +21,10 @@ use Swow\Coroutine\Exception as CoroutineException;
 
 class SwowServer
 {
-    protected string $host = '0.0.0.0';
-    protected int $port = 80;
     protected array $middlewares = [];
-    protected DispatcherInterface $dispatcher;
 
-    public function __construct(DispatcherInterface $dispatcher, string $host = '0.0.0.0', int $port = 80)
+    public function __construct(protected DispatcherInterface $dispatcher, protected string $host = '0.0.0.0', protected int $port = 80)
     {
-        $this->host = $host;
-        $this->port = $port;
-        $this->dispatcher = $dispatcher;
     }
 
     public function run(): void

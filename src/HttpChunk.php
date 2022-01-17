@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer;
@@ -9,24 +10,14 @@ namespace Rabbit\HttpServer;
  */
 class HttpChunk
 {
-    /** @var Response */
-    private Response $response;
-    /** @var string */
-    private string $preStr = '';
-    /** @var string */
-    private string $endStr = '';
-
     /**
      * HttpChunk constructor.
      * @param Response $response
      * @param string $preStr
      * @param string $endStr
      */
-    public function __construct(Response $response, string $preStr, string $endStr)
+    public function __construct(private Response $response, private string $preStr, private string $endStr)
     {
-        $this->response = $response;
-        $this->preStr = $preStr;
-        $this->endStr = $endStr;
         $this->write($preStr);
     }
 

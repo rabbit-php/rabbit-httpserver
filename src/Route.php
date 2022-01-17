@@ -6,7 +6,6 @@ namespace Rabbit\HttpServer;
 
 use Rabbit\Web\RequestContext;
 use Rabbit\Web\ResponseContext;
-use Rabbit\Server\ServerDispatcher;
 use Rabbit\Web\DispatcherInterface;
 use Swoole\Coroutine\Http\Server;
 use Swoole\Coroutine\Server as CoroutineServer;
@@ -17,11 +16,8 @@ use Swoole\Coroutine\Server as CoroutineServer;
  */
 class Route implements RouteInterface
 {
-    protected DispatcherInterface $dispatcher;
-
-    public function __construct(ServerDispatcher $dispatcher)
+    public function __construct(protected DispatcherInterface $dispatcher)
     {
-        $this->dispatcher = $dispatcher;
     }
 
     public function handle(Server|CoroutineServer $server): void

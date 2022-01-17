@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\HttpServer\Middleware;
@@ -15,11 +16,8 @@ use Rabbit\Web\ResponseContext;
  */
 class HealthCheckMiddleware implements MiddlewareInterface
 {
-    protected ?string $health;
-
-    public function __construct(string $health = '/health')
+    public function __construct(protected string $health = '/health')
     {
-        $this->health = $health;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

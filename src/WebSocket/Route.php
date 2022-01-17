@@ -15,18 +15,12 @@ use Swoole\Coroutine\Server as CoroutineServer;
 
 class Route implements RouteInterface
 {
-    protected array $routes = [];
-
-    protected ServerDispatcher $dispatcher;
-
     protected CloseHandlerInterface $closeHandler;
 
     protected array $responses = [];
 
-    public function __construct(ServerDispatcher $dispatcher, array $routes = [])
+    public function __construct(protected ServerDispatcher $dispatcher, protected array $routes = [])
     {
-        $this->dispatcher = $dispatcher;
-        $this->routes = $routes;
     }
 
     public function handle(Server|CoroutineServer $server): void

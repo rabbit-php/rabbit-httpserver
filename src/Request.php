@@ -16,8 +16,6 @@ class Request implements ServerRequestInterface
 {
     use MessageTrait;
 
-    protected \Swoole\Http\Request $swooleRequest;
-
     private array $attributes = [];
 
     private array $cookieParams = [];
@@ -38,7 +36,7 @@ class Request implements ServerRequestInterface
 
     private string $requestTarget;
 
-    public function __construct(\Swoole\Http\Request $swooleRequest)
+    public function __construct(private \Swoole\Http\Request $swooleRequest)
     {
         $server = $swooleRequest->server;
         $this->method = strtoupper($server['request_method'] ?? 'GET');
