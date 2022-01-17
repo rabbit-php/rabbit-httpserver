@@ -7,7 +7,7 @@ namespace Rabbit\HttpServer\Parser;
 use Rabbit\Base\Helper\JsonHelper;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Rabbit\Base\Exception\InvalidArgumentException;
+use Rabbit\HttpServer\Exceptions\BadRequestHttpException;
 
 /**
  * Class RequestJsonParser
@@ -22,7 +22,7 @@ class RequestJsonParser implements RequestParserInterface
             $bodyContent = $bodyStream->getContents();
             $bodyContent = empty($bodyContent) ? "{}" : $bodyContent;
             if (!JsonHelper::valid($bodyContent)) {
-                throw new InvalidArgumentException("params is not JSON");
+                throw new BadRequestHttpException("params is not JSON");
             }
             $bodyParams = JsonHelper::decode($bodyContent, true);
             $bodyParams = [...$request->getParsedBody(), ...$bodyParams];
