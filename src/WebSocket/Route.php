@@ -34,7 +34,7 @@ class Route implements RouteInterface
                     function (\Swoole\Http\Request $request, \Swoole\Http\Response $response) use (
                         $handShake,
                         $item
-                    ) {
+                    ): void {
                         try {
                             if (is_string($handShake) && ($handShake = getDI($handShake)) && $handShake instanceof HandShakeInterface) {
                                 if (!$handShake->checkHandshake($request, $response)) {

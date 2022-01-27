@@ -34,7 +34,7 @@ class SwowServer
         while (true) {
             try {
                 $session = $server->acceptSession();
-                $co = new Coroutine(function () use ($session) {
+                $co = new Coroutine(static function (DispatcherInterface $dispatcher) use ($session): void {
                     try {
                         while (true) {
                             $request = null;
@@ -44,7 +44,7 @@ class SwowServer
                                 $response = new Response();
                                 RequestContext::set($request);
                                 ResponseContext::set($response);
-                                $session->sendHttpResponse($this->dispatcher->dispatch($request));
+                                $session->sendHttpResponse($dispatcher->dispatch($request));
                             } catch (HttpException $exception) {
                                 $session->error($exception->getCode(), $exception->getMessage());
                             }
@@ -57,7 +57,7 @@ class SwowServer
                     } finally {
                         $session->close();
                     }
-                });
+                }, $this->dispatcher);
                 $co->resume();
             } catch (SocketException | CoroutineException $exception) {
                 if (in_array($exception->getCode(), [EMFILE, ENFILE, ENOMEM], true)) {

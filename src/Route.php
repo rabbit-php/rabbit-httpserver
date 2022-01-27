@@ -22,7 +22,7 @@ class Route implements RouteInterface
 
     public function handle(Server|CoroutineServer $server): void
     {
-        $server->handle('/', function (\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
+        $server->handle('/', function (\Swoole\Http\Request $request, \Swoole\Http\Response $response): void {
             try {
                 $psrRequest = new Request($request);
                 $psrResponse = new Response();

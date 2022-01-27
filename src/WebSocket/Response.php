@@ -50,11 +50,11 @@ class Response implements ResponseInterface
     public function send(): void
     {
         foreach ($this->fdList as $fd => $message) {
-            rgo(function () use ($fd, $message) {
+            rgo(function () use ($fd, $message): void {
                 (new \Swoole\Http\Response($fd))->push($message);
             });
         }
-        rgo(function () {
+        rgo(function (): void {
             $this->swooleResponse->push($this->stream);
         });
     }
