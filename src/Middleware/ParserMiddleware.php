@@ -25,7 +25,7 @@ class ParserMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($this->parser === null) {
-            $this->parser = getDI(RequestParser::class);
+            $this->parser = service(RequestParser::class);
         }
         $request = $this->parser->parse($request);
         return $handler->handle($request);

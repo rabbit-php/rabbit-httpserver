@@ -36,7 +36,7 @@ class Route implements RouteInterface
                         $item
                     ): void {
                         try {
-                            if (is_string($handShake) && ($handShake = getDI($handShake)) && $handShake instanceof HandShakeInterface) {
+                            if (is_string($handShake) && ($handShake = service($handShake)) && $handShake instanceof HandShakeInterface) {
                                 if (!$handShake->checkHandshake($request, $response)) {
                                     return;
                                 }
@@ -62,7 +62,7 @@ class Route implements RouteInterface
                                 $this->dispatcher->dispatch($psrRequest)->setSwooleResponse($response)->send();
                             }
                         } catch (Throwable $throw) {
-                            $errorResponse = getDI('errorResponse', false);
+                            $errorResponse = service('errorResponse', false);
                             if ($errorResponse === null) {
                                 $response->push("An internal server error occurred.");
                             } else {

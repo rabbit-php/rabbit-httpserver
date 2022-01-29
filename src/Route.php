@@ -30,7 +30,7 @@ class Route implements RouteInterface
                 ResponseContext::set($psrResponse);
                 $this->dispatcher->dispatch($psrRequest)->setSwooleResponse($response)->send();
             } catch (\Throwable $throw) {
-                $errorResponse = getDI('errorResponse', false);
+                $errorResponse = service('errorResponse', false);
                 if ($errorResponse === null) {
                     $response->status(500);
                     $response->end("An internal server error occurred.");

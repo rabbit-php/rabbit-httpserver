@@ -24,7 +24,7 @@ trait AcceptTrait
             return $response;
         }
         if ($this->formater === null) {
-            $this->formater = getDI(ResponseFormater::class);
+            $this->formater = create(ResponseFormater::class);
         }
 
         $response = $this->formater->format($request, $response, $data);

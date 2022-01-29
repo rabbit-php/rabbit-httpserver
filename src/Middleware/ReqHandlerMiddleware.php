@@ -35,7 +35,7 @@ class ReqHandlerMiddleware implements MiddlewareInterface
             . ($this->handlers ? $this->handlers . '\\' : '')
             . ($this->isUper ? ucfirst($action) : $action);
 
-        $class = getDI($class, false);
+        $class = service($class, false);
         if ($class === null) {
             throw new NotFoundHttpException("can not find the route:" . $request->getUri()->getPath());
         }

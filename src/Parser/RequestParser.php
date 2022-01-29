@@ -29,7 +29,7 @@ class RequestParser implements RequestParserInterface
 
         /* @var RequestParserInterface $parser */
         $parserName = $parsers[$contentType];
-        $parser = getDI($parserName);
+        $parser = service($parserName);
 
         return $parser->parse($request);
     }
