@@ -26,13 +26,13 @@ class ResponseFormater implements IResponseFormatTool
         $formaters = $this->mergeFormaters();
         if (!isset($formaters[$contentType])) {
             if ($this->default === null) {
-                $this->default = $formater = service(ResponseJsonFormater::class);
+                $this->default = $formater = create(ResponseJsonFormater::class);
             } else {
                 $formater = $this->default;
             }
         } else {
             $formaterName = $formaters[$contentType];
-            $formater = service($formaterName);
+            $formater = create($formaterName);
         }
 
         return $formater->format($response, $data);

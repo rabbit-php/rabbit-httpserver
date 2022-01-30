@@ -36,7 +36,7 @@ class Route implements RouteInterface
                         $item
                     ): void {
                         try {
-                            if (is_string($handShake) && ($handShake = service($handShake)) && $handShake instanceof HandShakeInterface) {
+                            if (is_string($handShake) && ($handShake = create($handShake)) && $handShake instanceof HandShakeInterface) {
                                 if (!$handShake->checkHandshake($request, $response)) {
                                     return;
                                 }
