@@ -24,7 +24,7 @@ class CoServer extends \Rabbit\Server\CoServer
         return new CoroutineServer($this->host, $this->port, $this->ssl, true);
     }
 
-    protected function startServer(CoroutineServer|Server $server = null): void
+    protected function startServer(CoroutineServer|Server $server): void
     {
         parent::startServer($server);
         if (!$this->route instanceof RouteInterface) {

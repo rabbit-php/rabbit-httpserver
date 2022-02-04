@@ -4,24 +4,15 @@ declare(strict_types=1);
 
 namespace Rabbit\HttpServer;
 
-
 use Throwable;
-use ReflectionException;
-use DI\NotFoundException;
-use DI\DependencyException;
 use Rabbit\Web\RequestContext;
 use Rabbit\Web\RequestHandler;
-use Rabbit\Base\Core\Exception;
 use Rabbit\Web\ResponseContext;
 use Rabbit\Base\Helper\FileHelper;
 use Rabbit\Server\ServerDispatcher;
 use Rabbit\Base\Contract\InitInterface;
 use Rabbit\HttpServer\Middleware\ReqHandlerMiddleware;
 
-/**
- * Class Server
- * @package Rabbit\HttpServer
- */
 class Server extends \Rabbit\Server\Server implements InitInterface
 {
     private array $middlewares = [];
@@ -67,7 +58,7 @@ class Server extends \Rabbit\Server\Server implements InitInterface
         return new \Swoole\Http\Server($this->host, $this->port, $this->type);
     }
 
-    protected function startServer(\Swoole\Server $server = null): void
+    protected function startServer(\Swoole\Server $server): void
     {
         parent::startServer($server);
         $server->on('request', [$this, 'onRequest']);
