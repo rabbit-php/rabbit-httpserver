@@ -9,6 +9,7 @@ use Rabbit\Web\RequestContext;
 use Rabbit\Web\ResponseContext;
 use Rabbit\Base\Helper\JsonHelper;
 use Rabbit\HttpServer\Exceptions\BadRequestHttpException;
+use Rabbit\HttpServer\Request;
 use Rabbit\Server\ServerDispatcher;
 use Rabbit\HttpServer\RouteInterface;
 use Swoole\Coroutine\Http\Server;
@@ -54,8 +55,21 @@ class Route implements RouteInterface
                                 if (!JsonHelper::valid($frame->data)) {
                                     throw new BadRequestHttpException("param is not JSON");
                                 }
-                                $data = JsonHelper::decode($frame->data, true);
-                                $psrRequest = new Request($data, $request);
+                                $param = JsonHelper::decode($frame->data, true);
+                                parse_str($request?->server['query_string'], $query);
+                                $data = [
+                                    'server' => $request?->server,
+                                    'header' => $request?->header,
+                                    'query' => $param['query'] ?? $query,
+                                    'body' => $param['body'] ?? [],
+                                    'content' => $request?->rawContent(),
+                                    'cookie' => $request?->cookie,
+                                    'files' => $request?->files,
+                                    'fd' => $frame->fd,
+                                    'request' => $request,
+                                ];
+                                $data['server']['request_uri'] = $param['cmd'] ?? $data['server']['request_uri'];
+                                $psrRequest = new Request($data);
                                 $psrResponse = new Response();
                                 RequestContext::set($psrRequest);
                                 ResponseContext::set($psrResponse);
