@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace Rabbit\HttpServer\WebSocket;
 
-use Exception;
 use Rabbit\Web\MessageTrait;
 use Psr\Http\Message\ResponseInterface;
 use Rabbit\Base\Exception\NotSupportedException;
 
-/**
- * Class Response
- * @package Rabbit\HttpServer\WebSocket
- */
 class Response implements ResponseInterface
 {
     use MessageTrait;

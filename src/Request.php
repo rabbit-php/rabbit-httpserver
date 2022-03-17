@@ -11,46 +11,50 @@ use Rabbit\Web\UploadedFile;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Rabbit\Web\AttributeEnum;
 
 class Request implements ServerRequestInterface
 {
     use MessageTrait;
 
-    private array $attributes = [];
+    protected array $attributes = [];
 
-    private array $cookieParams = [];
+    protected array $cookieParams = [];
 
-    private $parsedBody;
+    protected array $parsedBody = [];
 
-    private $bodyParams;
+    protected array $queryParams = [];
 
-    private array $queryParams = [];
+    protected array $serverParams = [];
 
-    private array $serverParams = [];
+    protected array $uploadedFiles = [];
 
-    private array $uploadedFiles = [];
+    protected string $method = 'GET';
 
-    private $method;
+    protected UriInterface $uri;
 
-    private UriInterface $uri;
+    protected ?string $requestTarget = null;
 
-    private string $requestTarget;
-
-    public function __construct(private \Swoole\Http\Request $swooleRequest)
+    public function __construct(array $data)
     {
-        $server = $swooleRequest->server;
+        $server = $data['server'] ?? [];
+        $header = $data['header'] ?? [];
+        $content = $data['content'] ?? '';
         $this->method = strtoupper($server['request_method'] ?? 'GET');
-        $this->setHeaders($swooleRequest->header ?? []);
-        $this->uri = self::getUriFromGlobals($swooleRequest);
-        $this->stream = new SwooleStream($swooleRequest->rawContent());
+        $this->setHeaders($header);
+        $this->uri = self::getUriFromGlobals($server, $header);
+        $this->stream = new SwooleStream($content);
         $this->protocol = isset($server['server_protocol']) ? str_replace('HTTP/', '', $server['server_protocol']) : '1.1';
 
-        $this->withCookieParams($swooleRequest->cookie ?? [])
-            ->withQueryParams($swooleRequest->get ?? [])
-            ->withParsedBody($swooleRequest->post ?? [])
-            ->withUploadedFiles(self::normalizeFiles($swooleRequest->files ?? []))
+        $req = $this->withCookieParams($data['cookie'] ?? [])
+            ->withQueryParams($data['get'] ?? [])
+            ->withParsedBody($data['body'] ?? [])
+            ->withUploadedFiles(self::normalizeFiles($data['files'] ?? []))
             ->withServerParams($server ?? [])
-            ->setSwooleRequest($swooleRequest);
+            ->withAttribute(AttributeEnum::CONNECT_FD, $data['fd'] ?? null);
+        if ($data['request'] ?? false) {
+            $req->setSwooleRequest($data['request']);
+        }
     }
 
     private function setHeaders(array $headers): Request
@@ -68,10 +72,8 @@ class Request implements ServerRequestInterface
         return $this;
     }
 
-    private static function getUriFromGlobals(\Swoole\Http\Request $swooleRequest): Uri
+    private static function getUriFromGlobals(array $server, array $header): Uri
     {
-        $server = $swooleRequest->server;
-        $header = $swooleRequest->header;
         $uri = new Uri();
         $uri = $uri->withScheme(!empty($server['https']) && $server['https'] !== 'off' ? 'https' : 'http');
 
