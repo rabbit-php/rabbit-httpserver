@@ -47,7 +47,7 @@ class Request implements ServerRequestInterface
         $this->protocol = isset($server['server_protocol']) ? str_replace('HTTP/', '', $server['server_protocol']) : '1.1';
 
         $req = $this->withCookieParams($data['cookie'] ?? [])
-            ->withQueryParams($data['get'] ?? [])
+            ->withQueryParams($data['query'] ?? [])
             ->withParsedBody($data['body'] ?? [])
             ->withUploadedFiles(self::normalizeFiles($data['files'] ?? []))
             ->withServerParams($server ?? [])
