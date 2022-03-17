@@ -24,7 +24,18 @@ class Route implements RouteInterface
     {
         $server->handle('/', function (\Swoole\Http\Request $request, \Swoole\Http\Response $response): void {
             try {
-                $psrRequest = new Request($request);
+                $data = [
+                    'server' => $request->server,
+                    'header' => $request->header,
+                    'query' => $request->get,
+                    'body' => $request->post,
+                    'content' => $request->rawContent(),
+                    'cookie' => $request->cookie,
+                    'files' => $request->files,
+                    'fd' => $request->fd,
+                    'request' => $request,
+                ];
+                $psrRequest = new Request($data);
                 $psrResponse = new Response();
                 RequestContext::set($psrRequest);
                 ResponseContext::set($psrResponse);
