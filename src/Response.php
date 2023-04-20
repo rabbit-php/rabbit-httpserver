@@ -90,6 +90,8 @@ class Response implements ResponseInterface
 
     private array $cookies = [];
 
+    private bool $pre_send = false;
+
     public function withStatus($code, $reasonPhrase = '')
     {
 
@@ -232,6 +234,11 @@ class Response implements ResponseInterface
     {
         if ($this->_isSend) {
             return false;
+        }
+        if (!$this->pre_send) {
+            $this->pre_send = true;
+            $this->sendHeaders();
+            $this->sendCookies();
         }
         return $this->swooleResponse->write($chuck);
     }

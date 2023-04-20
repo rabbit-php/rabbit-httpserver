@@ -50,9 +50,10 @@ class Server extends \Rabbit\Server\Server implements InitInterface
             ];
             $psrRequest = new Request($data);
             $psrResponse = new Response();
+            $psrResponse->setSwooleResponse($response);
             RequestContext::set($psrRequest);
             ResponseContext::set($psrResponse);
-            $this->dispatcher->dispatch($psrRequest)->setSwooleResponse($response)->send();
+            $this->dispatcher->dispatch($psrRequest)->send();
         } catch (Throwable $throw) {
             $errorResponse = service('errorResponse', false);
             if ($errorResponse === null) {
